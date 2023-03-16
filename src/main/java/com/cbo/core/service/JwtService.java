@@ -33,6 +33,9 @@ public class JwtService implements UserDetailsService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+
+
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user =userRepo.findByUserName(username);
@@ -46,6 +49,7 @@ public class JwtService implements UserDetailsService {
             throw new UsernameNotFoundException("Username is not valid");
         }
     }
+
 
     public JwtResponse createJwtToken(JwtRequest jwtRequest) throws Exception {
         String username = jwtRequest.getUserName();
@@ -64,6 +68,7 @@ public class JwtService implements UserDetailsService {
         return new JwtResponse(user, newGeneratedToken);
     }
 
+
     private Set getAuthorities(User user){
         Set authorities = new HashSet();
         if (user != null){
@@ -74,6 +79,7 @@ public class JwtService implements UserDetailsService {
 
         return authorities;
     }
+
 
     private void authenticate(String username, String password) throws Exception {
         try {
@@ -89,4 +95,6 @@ public class JwtService implements UserDetailsService {
             throw new IncorrectUsernameOrPasswordException("Authentication is faild");
         }
     }
+
+
 }

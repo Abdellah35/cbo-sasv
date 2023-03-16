@@ -13,7 +13,7 @@ import java.util.List;
 public class RoleService {
     private final RoleRepository roleRepository;
 
-    @Autowired
+
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
@@ -30,9 +30,11 @@ public class RoleService {
                     "Role already exists!!");
     }
 
+
     public List<Role> findAllRole(){
         return roleRepository.findAll();
     }
+
 
     public Role updateRole(Role role){
         Role existingRole = roleRepository.findById(role.getId()).orElse(null);
@@ -47,9 +49,11 @@ public class RoleService {
         }
     }
 
+
     public Role findRoleById(Long id){
         return roleRepository.findById(id).orElseThrow(() -> new NoSuchUserExistsException("Role By id "+ id + " was not found"));
     }
+
 
     public String deleteRole(Long id){
         Role existingRole = roleRepository.findById(id).orElse(null);
@@ -61,7 +65,7 @@ public class RoleService {
 
             return "Record deleted Successfully";
         }
-
     }
+
 
 }

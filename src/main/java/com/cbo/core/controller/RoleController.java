@@ -3,7 +3,6 @@ package com.cbo.core.controller;
 import com.cbo.core.exception.NoSuchUserExistsException;
 import com.cbo.core.exception.ResourceNotFoundException;
 import com.cbo.core.model.Division;
-import com.cbo.core.model.ERole;
 import com.cbo.core.model.Role;
 import com.cbo.core.model.User;
 import com.cbo.core.repo.RoleRepository;
@@ -16,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,14 +25,23 @@ import java.util.Set;
 @RestController
 @RequestMapping("/role")
 public class RoleController {
+
+    private final UserService userService;
+
+    private final RoleService roleService;
+
+    private final UserRepository userRepository;
+
+    private final RoleRepository roleRepository;
+
     @Autowired
-    private UserService userService;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
+    public RoleController(UserService userService, RoleService roleService, UserRepository userRepository, RoleRepository roleRepository) {
+        this.userService = userService;
+        this.roleService = roleService;
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
+
 
     @GetMapping("/all")
     @ApiOperation(value = "List all Role",
@@ -41,39 +51,57 @@ public class RoleController {
     public ResponseEntity<List<Role>> allRoles(){
         List<Role> roles = roleService.findAllRole();
 
-        return new ResponseEntity<>(roles, HttpStatus.OK);
+        return ResponseEntity.ok(roles);
     }
+
+
     @GetMapping("find/{id}")
     @ApiOperation(value = "Finds Role by id",
             notes = "Provide an id to look up specific role from the Role table",
             response = Division.class)
-    public Role getRoleById(@PathVariable("id") Long id){
-        return roleService.findRoleById(id);
+    public ResponseEntity<Role> getRoleById(@PathVariable("id") Long id){
+        Role role=  roleService.findRoleById(id);
+
+        return ResponseEntity.ok(role);
     }
+
+
     @PostMapping("/add")
     @ApiOperation(value = "Add new Role",
             notes = "When you create a role u need to provide Role name",
             response = Role.class)
-    public Role createRole(@RequestBody Role role){
+    public ResponseEntity<Role> createRole(@RequestBody Role role){
 
-        return roleService.addRole(role);
+        Role newRole = roleService.addRole(role);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newRole.getId()).toUri();
+
+        return ResponseEntity.created(location).body(newRole);
     }
+
+
     @PutMapping("update")
     @ApiOperation(value = "Update Existing Role",
             notes = "All fields can be updated except Role Id",
             response = User.class)
-    public Role updateRole(@RequestBody Role role){
+    public ResponseEntity<?> updateRole(@RequestBody Role role){
 
-        return roleService.updateRole(role);
+        roleService.updateRole(role);
+
+        return ResponseEntity.noContent().build();
     }
+
+
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "Delete existing Role",
             notes = "Delete Role by Id",
             response = User.class)
-    public String deleteRole(@PathVariable("id") Long id){
+    public ResponseEntity<?> deleteRole(@PathVariable("id") Long id){
 
-        return roleService.deleteRole(id);
+        roleService.deleteRole(id);
+
+        return ResponseEntity.noContent().build();
     }
+
 
     @PostMapping("/users/{userId}")
     public ResponseEntity<List<User>> addRole(@PathVariable(value = "userId") Long userId, @RequestBody Role roleRequest) {

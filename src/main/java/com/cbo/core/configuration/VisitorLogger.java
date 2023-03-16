@@ -15,11 +15,17 @@ import java.time.LocalDateTime;
 @Component
 public class VisitorLogger implements HandlerInterceptor {
 
-    @Autowired
-    private VisitorService visitorService;
+
+    private final VisitorService visitorService;
 
     @Value("${spring.application.name}")
     private String appName;
+
+    @Autowired
+    public VisitorLogger(VisitorService visitorService) {
+        this.visitorService = visitorService;
+
+    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)

@@ -86,4 +86,6 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }
+
+    //Exception Handler
 }

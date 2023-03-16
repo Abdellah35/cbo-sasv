@@ -23,7 +23,6 @@ public class AuthorityDbService {
     private final DivisionRepository divisionRepository;
 
 
-    @Autowired
     public AuthorityDbService(AuthorityDbRepository authorityRepo, EmployeeRepository employeeRepository, DivisionRepository divisionRepository) {
         this.authorityRepo = authorityRepo;
 
@@ -79,43 +78,53 @@ public AuthorityDB addAuthority(Long divisionId, Long employeeId) throws IOExcep
         throw new NoSuchUserExistsException("No Such Employee exists!!");
 
 }
-    public List<AuthorityDB> findAllAuthority(){
 
-        return authorityRepo.findAll();
+
+public List<AuthorityDB> findAllAuthority(){
+
+    return authorityRepo.findAll();
+}
+
+
+public List<AuthorityDB> findAllAuthorityByState(boolean isActive){
+
+    return authorityRepo.findAllByIsActive(isActive);
+}
+
+
+public AuthorityDB updateAuthority(Long id, Boolean isActive) {
+
+    AuthorityDB oldAuthority = authorityRepo.findById(id).orElse(null);
+    if (oldAuthority == null)
+        throw new NoSuchUserExistsException("No Such Authority exists!!");
+    else {
+            oldAuthority.setIsActive(isActive);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            oldAuthority.setUpdatedAt(dtf.format(now));
+
+            AuthorityDB auth0 = authorityRepo.save(oldAuthority);
+
+            return auth0;
     }
-    public List<AuthorityDB> findAllAuthorityByState(boolean isActive){
+}
 
-        return authorityRepo.findAllByIsActive(isActive);
+
+
+public AuthorityDB findAuthorityById(Long id){
+    return authorityRepo.findById(id).orElseThrow(() -> new NoSuchUserExistsException("Authority By id "+ id + " was not found"));
+}
+
+public String deleteAuthority(Long id){
+
+    AuthorityDB oldAuthority = authorityRepo.findById(id).orElse(null);
+    if (oldAuthority == null)
+        throw new NoSuchUserExistsException("No Such Authority exists!!");
+    else {
+        authorityRepo.deleteById(id);
+
+        return "Record deleted Successfully";
     }
-    public AuthorityDB updateAuthority(Long id, Boolean isActive) {
+}
 
-        AuthorityDB oldAuthority = authorityRepo.findById(id).orElse(null);
-        if (oldAuthority == null)
-            throw new NoSuchUserExistsException("No Such Authority exists!!");
-        else {
-                oldAuthority.setIsActive(isActive);
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                LocalDateTime now = LocalDateTime.now();
-                oldAuthority.setUpdatedAt(dtf.format(now));
-
-                AuthorityDB auth0 = authorityRepo.save(oldAuthority);
-
-                return auth0;
-        }
-    }
-
-    public AuthorityDB findAuthorityById(Long id){
-        return authorityRepo.findById(id).orElseThrow(() -> new NoSuchUserExistsException("Authority By id "+ id + " was not found"));
-    }
-    public String deleteAuthority(Long id){
-
-        AuthorityDB oldAuthority = authorityRepo.findById(id).orElse(null);
-        if (oldAuthority == null)
-            throw new NoSuchUserExistsException("No Such Authority exists!!");
-        else {
-            authorityRepo.deleteById(id);
-
-            return "Record deleted Successfully";
-        }
-    }
 }

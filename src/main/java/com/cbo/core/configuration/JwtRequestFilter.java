@@ -1,8 +1,8 @@
 package com.cbo.core.configuration;
 
+import com.cbo.core.exception.IncorrectUsernameOrPasswordException;
 import com.cbo.core.service.JwtService;
 import com.cbo.core.utility.JwtUtil;
-import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtils;
     @Autowired
-    private JwtService userDetailsService;
+    private  JwtService userDetailsService;
     private static final Logger logger  = LoggerFactory.getLogger(JwtRequestFilter.class);
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -53,14 +55,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e);
+            throw new IncorrectUsernameOrPasswordException("Incorrect username or password.");
         }
         filterChain.doFilter(request, response);
 
     }
-    private String parseJwt(HttpServletRequest request) {
+/*    private String parseJwt(HttpServletRequest request) {
         String jwt = jwtUtils.getJwtFromCookies(request);
         return jwt;
-    }
+    }*/
 
 }

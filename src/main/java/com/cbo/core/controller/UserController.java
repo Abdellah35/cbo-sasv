@@ -13,16 +13,19 @@ import org.springframework.http.ResponseEntity;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
+
     private final UserService userService;
 
+    @Autowired
     public UserController( UserService userService) {
         this.userService = userService;
     }
@@ -35,8 +38,9 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<User>> getAllUser(){
         List<User> users = userService.findAllUser();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return ResponseEntity.ok(users);
     }
+
 
     //The method bellow used to get a specific user with an Id
     @GetMapping("/find/{id}")
@@ -44,10 +48,13 @@ public class UserController {
         notes = "Provide an id to look up specific user from the User table",
         response = User.class)
     @PreAuthorize("hasRole('ADMIN')")
-    public User getUserById(@ApiParam(value =  "Id value for the User you need to retrieve", required = true) @PathVariable("id") Long id){
+    public ResponseEntity<User> getUserById(@ApiParam(value =  "Id value for the User you need to retrieve", required = true) @PathVariable("id") Long id){
 
-        return userService.findUserById(id);
+        User usr = userService.findUserById(id);
+
+        return ResponseEntity.ok(usr);
     }
+
 
     //This method used for adding a new user with the given info
     @PostMapping("/add")
@@ -55,10 +62,14 @@ public class UserController {
             notes = "When you create a user u need to provide Employee",
             response = User.class)
     @PreAuthorize("hasRole('ADMIN')")
-    public User addUser(@RequestBody User user){
+    public ResponseEntity<User> addUser(@RequestBody User user){
 
-        return  userService.addUser(user,user.getRole());
+        User newUser = userService.addUser(user,user.getRole());
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newUser.getId()).toUri();
+
+        return ResponseEntity.created(location).body(newUser);
     }
+
 
     //This method used to update an existing user
     @PutMapping("/update")
@@ -66,10 +77,13 @@ public class UserController {
             notes = "All fields can be updated except User Id",
             response = User.class)
 /*    @PreAuthorize("hasRole('ADMIN')")*/
-    public User updateUser(@RequestBody User user){
+    public ResponseEntity<?> updateUser(@RequestBody User user){
         System.out.println(user.isActive());
-        return userService.updateUser(user, user.isActive());
+        userService.updateUser(user, user.isActive());
+
+        return ResponseEntity.noContent().build();
     }
+
 
     //using the following method admins can delete an existing user
     @DeleteMapping("/delete/{id}")
@@ -77,20 +91,11 @@ public class UserController {
             notes = "Delete User by Id",
             response = User.class)
     @PreAuthorize("hasRole('ADMIN')")
-    public String deleteUser(@PathVariable("id") Long id){
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id){
 
-        return userService.deleteUser(id);
+        userService.deleteUser(id);
+
+        return ResponseEntity.noContent().build();
     }
 
-    //Exception Handler
-    @ExceptionHandler(value
-            = UserAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse
-    handleUserAlreadyExistsException(
-            UserAlreadyExistsException ex)
-    {
-        return new ErrorResponse(HttpStatus.CONFLICT.value(),
-                ex.getMessage());
-    }
 }

@@ -21,21 +21,18 @@ import java.util.Set;
 public class UserService {
 
     private final UserRepository userRepository;
-
     private final RoleRepository roleRepository;
     private final RoleService roleService;
-
-
-    @Autowired
     private final EmployeeService employeeService;
 
-    @Autowired
+
     public UserService(UserRepository userRepository, RoleRepository roleRepository, RoleService roleService, EmployeeService employeeService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.roleService = roleService;
         this.employeeService = employeeService;
     }
+
 
     public void addAdmin(){
         User userExist =userRepository.findByUserName("admin@cbo");
@@ -60,6 +57,8 @@ public class UserService {
         }
 
     }
+
+
     public User addUser(User user, String role){
         User existingUser =null;
 
@@ -104,9 +103,11 @@ public class UserService {
 
     }
 
+
     public List<User> findAllUser(){
         return userRepository.findAll();
     }
+
 
     public User updateUser(User user, boolean state){
         System.out.println("is active "+user.isActive());
@@ -129,13 +130,16 @@ public class UserService {
 
     }
 
+
     public User findUserById(Long id){
         return userRepository.findById(id).orElseThrow(() -> new NoSuchUserExistsException("NO User PRESENT WITH ID = " + id));
     }
 
+
     public List<User> findUsersByRoleId(Long id){
         return userRepository.findUsersByRolesId(id);
     }
+
 
     public String deleteUser(Long id){
 
