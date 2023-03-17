@@ -115,7 +115,7 @@ public class SignatureAndStampVerificationApplication {
 				"Accept","Authorization","Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
 		corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
 		UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-		urlBasedCorsConfigurationSource.registerCorsConfiguration("http://localhost:4200/**", corsConfiguration);
+		urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 		return new CorsFilter(urlBasedCorsConfigurationSource);
 	}
 }

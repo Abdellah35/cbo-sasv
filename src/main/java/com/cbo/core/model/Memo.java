@@ -17,19 +17,20 @@ public class Memo {
             generator = "memo_sequence")
     private Long refnom;
 
-    private Date curdate;
-
-    private Date sendate;
-
+    @Column(name="toTo")
     private String toTo;
-
+    @Column(name="fromFrom")
     private String fromFrom;
-
+    @Column(name="carbonCopy")
     private String carbonCopy;
-
+    @Column(name="subject")
     private String subject;
-
+    @Column(name="body")
     private String body;
+    @Column(name="curdate")
+    private Date curdate;
+    @Column(name="sendate")
+    private Date sendate;
 
 
     public Memo() {
