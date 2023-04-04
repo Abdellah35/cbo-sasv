@@ -51,7 +51,7 @@ public class UserController {
     public ResponseEntity<User> getUserById(@ApiParam(value =  "Id value for the User you need to retrieve", required = true) @PathVariable("id") Long id){
 
         User usr = userService.findUserById(id);
-
+        usr.setPassword("encoded_password");
         return ResponseEntity.ok(usr);
     }
 
@@ -79,7 +79,7 @@ public class UserController {
 /*    @PreAuthorize("hasRole('ADMIN')")*/
     public ResponseEntity<?> updateUser(@RequestBody User user){
         System.out.println(user.isActive());
-        userService.updateUser(user, user.isActive());
+        userService.updateUser(user, user.isActive(), user.getRole());
 
         return ResponseEntity.noContent().build();
     }

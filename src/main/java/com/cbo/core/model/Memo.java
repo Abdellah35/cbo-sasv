@@ -25,7 +25,7 @@ public class Memo {
     private String carbonCopy;
     @Column(name="subject")
     private String subject;
-    @Column(name="body")
+    @Column(name="body", columnDefinition = "varchar(10000)")
     private String body;
     @Column(name="curdate")
     private Date curdate;

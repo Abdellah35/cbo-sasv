@@ -38,21 +38,19 @@ public class AuthorityController {
             response = AuthorityDB.class)
 
     @GetMapping(path = "/all", produces=MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','DIRECTOR')")
     public List<AuthorityDB> getAllAuthority(){
         return authorityDbService.findAllAuthority();
     }
 
-
     @GetMapping(path = "/all/{isActive}")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','DIRECTOR')")
     public ResponseEntity<List<AuthorityDB>> getAllAuthorityByState(@PathVariable(required = false) boolean isActive){
 
         List<AuthorityDB> allAuth = authorityDbService.findAllAuthorityByState(isActive);
 
         return ResponseEntity.ok(allAuth);
     }
-
 
     @GetMapping(path = "/find/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Finds Authority by id",

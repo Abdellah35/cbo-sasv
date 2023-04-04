@@ -59,39 +59,28 @@ public class UserService {
     }
 
 
-    public User addUser(User user, String role){
+    public User addUser(User user, Long role){
         User existingUser =null;
 
         existingUser = userRepository.findByUserName(user.getUsername());
 
         System.out.println("here User role " + role);
         if (existingUser == null) {
+
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(user.getPassword());
+
             user.setPassword(encodedPassword);
             if (user.getEmployee() != null){
                 Employee employee = employeeService.findEmployeeById(user.getEmployee().getId().longValue());
                 user.setEmployee(employee);
             }
+
+
             Set<Role> roles = new HashSet<>();
-            if (role.equals("admin")){
-                Role _role = roleRepository.findByName(ERole.ROLE_ADMIN);
-
-                roles.add(_role);
-                user.setRoles(roles);
-            }
-            else if(role.equals("director")){
-                Role _role = roleRepository.findByName(ERole.ROLE_DIRECTOR);
-
-                roles.add(_role);
-                user.setRoles(roles);
-            }
-            else{
-                Role _role = roleRepository.findByName(ERole.ROLE_USER);
-
-                roles.add(_role);
-                user.setRoles(roles);
-            }
+            Role _role = roleRepository.findById(role).orElse(null);
+            roles.add(_role);
+            user.setRoles(roles);
             user.setActive(true);
 
             User saveduser=userRepository.save(user);
@@ -109,8 +98,7 @@ public class UserService {
     }
 
 
-    public User updateUser(User user, boolean state){
-        System.out.println("is active "+user.isActive());
+    public User updateUser(User user, boolean state, Long role){
         User existingUser = userRepository.findById(user.getId()).orElse(null);
         if (existingUser == null)
             throw new NoSuchUserExistsException("No Such User exists!!");
@@ -122,6 +110,21 @@ public class UserService {
                 Employee employee = employeeService.findEmployeeById(user.getEmployee().getId().longValue());
                 existingUser.setEmployee(employee);
             }
+            if(user.getPassword() != "encoded_password"){
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                String encodedPassword = passwordEncoder.encode(user.getPassword());
+
+                existingUser.setPassword(encodedPassword);
+            }
+
+            Set<Role> roles = new HashSet<>();
+            if(role != null){
+                Role _role = roleRepository.findById(role).orElse(null);
+                roles.add(_role);
+                user.setRoles(roles);
+                existingUser.setRoles(roles);
+            }
+
 
             User updatedUser = userRepository.save(existingUser);
 

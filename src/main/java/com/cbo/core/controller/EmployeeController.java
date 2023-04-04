@@ -18,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -70,10 +72,11 @@ public class EmployeeController {
                                                 @RequestParam("fatherName") String fatherName,
                                                 @RequestParam("grandFatherName") String grandFatherName,
                                                 @RequestParam("position") String position,
-                                                @RequestParam("email") String email,
-                                                @RequestParam("phoneNumber") String phoneNumber,
-                                                @RequestParam("divisionId") String divisionId
-
+                                                @RequestParam(name="email", required = false) String email,
+                                                @RequestParam(name="phoneNumber", required = false) String phoneNumber,
+                                                @RequestParam("divisionId") String divisionId,
+                                                @RequestParam("birthDate") Date birthDate,
+                                                @RequestParam("cboEmail") String cboEmail
                                 ){
 
         System.out.println("in add employee");
@@ -86,6 +89,13 @@ public class EmployeeController {
         employee1.setFatherName(fatherName);
         employee1.setGrandFatherName(grandFatherName);
         employee1.setPhoneNumber(phoneNumber);
+        employee1.setCboEmail(cboEmail);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        System.out.println(formatter.format(birthDate));
+
+        employee1.setBirthDate(formatter.format(birthDate));
         if(signatureImage != null){
             String signatureName = StringUtils.cleanPath(signatureImage.getOriginalFilename());
             employee1.setSignatureImage(signatureName);
@@ -121,7 +131,8 @@ public class EmployeeController {
                                @RequestParam("email") String email,
                                @RequestParam("phoneNumber") String phoneNumber,
                                @RequestParam("id") String id,
-                               @RequestParam("divisionId") String divisionId){
+                               @RequestParam("divisionId") String divisionId,
+                               @RequestParam("birthDate") Date birthDate){
 
         Employee employee1 = new Employee();
         if(signatureImage != null){
@@ -139,6 +150,11 @@ public class EmployeeController {
         employee1.setFatherName(fatherName);
         employee1.setGrandFatherName(grandFatherName);
         employee1.setPhoneNumber(phoneNumber);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        System.out.println(formatter.format(birthDate));
+
+        employee1.setBirthDate(formatter.format(birthDate));
         employeeService.updateEmployee(employee1, signatureImage, l);
 
         return ResponseEntity.noContent().build();
