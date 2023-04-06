@@ -101,7 +101,7 @@ public class UserService {
     public User updateUser(User user, boolean state, Long role){
         User existingUser = userRepository.findById(user.getId()).orElse(null);
         if (existingUser == null)
-            throw new NoSuchUserExistsException("No Such User exists!!");
+            throw new NoSuchUserExistsException("No such user exists!");
         else {
             existingUser.setEmail(user.getEmail());
             existingUser.setUsername(user.getUsername());
@@ -135,7 +135,7 @@ public class UserService {
 
 
     public User findUserById(Long id){
-        return userRepository.findById(id).orElseThrow(() -> new NoSuchUserExistsException("NO User PRESENT WITH ID = " + id));
+        return userRepository.findById(id).orElseThrow(() -> new NoSuchUserExistsException("NO user exists with id = " + id));
     }
 
 
@@ -152,11 +152,11 @@ public class UserService {
         role.setName(ERole.ROLE_ADMIN);
         roles.add(role);
         if (existingUser == null || existingUser.getRoles() == roles)
-            throw new NoSuchUserExistsException("No Such User exists!!");
+            throw new NoSuchUserExistsException("No such user exists!");
         else {
             userRepository.deleteById(id);
 
-            return "Record deleted Successfully";
+            return "Record deleted successfully!";
         }
     }
 

@@ -40,14 +40,13 @@ public Employee addEmployee(Employee employee, MultipartFile signature, Long div
         savedEmployee = employeeRepository.findById(employee.getId()).orElse(null);
     }
     if (savedEmployee != null)
-        throw new ResourceNotFoundException("Employee Already exist");
+        throw new ResourceNotFoundException("Employee with id "+savedEmployee.getId()+" already exist.");
     else {
         if (divisionId != null) {
             Division division = divisionService.findDivisionById(divisionId);
             employee.setDivision(division);
         } else
-            throw new ResourceNotFoundException(
-                    "Division Not Found. Change Id and try again.");
+            throw new ResourceNotFoundException("Division not found. Change the ID and try again.");
 
         if(signature != null){
             employee.setSignatureImage(employee.getSignatureImage());
@@ -80,7 +79,7 @@ public Employee updateEmployee(Employee employee, MultipartFile signatureImage, 
     System.out.println("Division Id " + divisionId);
     Employee oldEmployee = employeeRepository.findById(employee.getId()).orElse(null);
     if (oldEmployee == null)
-        throw new NoSuchUserExistsException("No Such Employee exists!!");
+        throw new NoSuchUserExistsException("No such employee exists!");
     else {
 
         if (divisionId != null){
@@ -90,7 +89,7 @@ public Employee updateEmployee(Employee employee, MultipartFile signatureImage, 
         }
         else
             throw new ResourceNotFoundException(
-                    "Division Not Found. Change Id and try again.");
+                    "Division not found. Change the ID and try again.");
 
         oldEmployee.setEmail(employee.getEmail());
         oldEmployee.setGivenName(employee.getGivenName());
@@ -145,7 +144,7 @@ public String deleteEmployee(Long id){
 
     Employee existingEmployee = employeeRepository.findById(id).orElse(null);
     if (existingEmployee == null)
-        throw new NoSuchUserExistsException("No Such Employee exists!!");
+        throw new NoSuchUserExistsException("No such employee exists!");
     else {
         employeeRepository.deleteById(id);
 

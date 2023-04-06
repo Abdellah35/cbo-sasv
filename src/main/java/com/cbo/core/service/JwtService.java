@@ -88,11 +88,11 @@ public class JwtService implements UserDetailsService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,password, getAuthorities(user)));
 
         } catch (DisabledException e){
-            throw new IncorrectUsernameOrPasswordException("User is Disabled");
+            throw new IncorrectUsernameOrPasswordException("User is disabled");
         } catch ( BadCredentialsException e){
             throw new IncorrectUsernameOrPasswordException("Incorrect Username Or Password!");
         } catch (AuthenticationException e){
-            throw new IncorrectUsernameOrPasswordException("Authentication is faild");
+            throw new IncorrectUsernameOrPasswordException("Authentication is failed");
         }
     }
 

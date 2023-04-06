@@ -27,7 +27,7 @@ public class RoleService {
         }
         else
             throw new UserAlreadyExistsException(
-                    "Role already exists!!");
+                    "Role already exists!");
     }
 
 
@@ -40,7 +40,7 @@ public class RoleService {
         Role existingRole = roleRepository.findById(role.getId()).orElse(null);
 
         if (existingRole == null)
-            throw new NoSuchUserExistsException("No Such Role exists!!");
+            throw new NoSuchUserExistsException("No such role exists!");
         else {
             existingRole.setName(role.getName());
             Role updatedRole = roleRepository.save(existingRole);
@@ -51,7 +51,7 @@ public class RoleService {
 
 
     public Role findRoleById(Long id){
-        return roleRepository.findById(id).orElseThrow(() -> new NoSuchUserExistsException("Role By id "+ id + " was not found"));
+        return roleRepository.findById(id).orElseThrow(() -> new NoSuchUserExistsException("Role by id "+ id + " was not found."));
     }
 
 
@@ -59,11 +59,11 @@ public class RoleService {
         Role existingRole = roleRepository.findById(id).orElse(null);
 
         if (existingRole == null)
-            throw new NoSuchUserExistsException("No Such Role exists!!");
+            throw new NoSuchUserExistsException("No such role exists!");
         else {
             roleRepository.deleteById(id);
 
-            return "Record deleted Successfully";
+            return "Record deleted Successfully.";
         }
     }
 

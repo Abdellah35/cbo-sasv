@@ -39,14 +39,14 @@ public AuthorityDB addAuthority(Long divisionId, Long employeeId) throws IOExcep
 
     //this checks if employee is not null
     if(employee == null)
-        throw new NoSuchUserExistsException("No Such Employee exists!!");
+        throw new NoSuchUserExistsException("No such employee exists!");
     else if (division == null) {
         //throws exception if division is not present with the provided id
-        throw new NoSuchUserExistsException("No Such Division exists!!");
+        throw new NoSuchUserExistsException("No such division exists!");
     } else if (employee.getDivision() != null) {
         //throws exception if the division and division of the employee are differ
         if (employee.getDivision().getId() != divisionId)
-            throw new NoSuchUserExistsException("This Employee is not part of the provided division!");
+            throw new NoSuchUserExistsException("This employee is not part of the provided division.");
     }
 
     AuthorityDB authDb = authorityRepo.findAuthorityDBByDivisionAndIsActive(division, true).orElse(null);
@@ -59,9 +59,9 @@ public AuthorityDB addAuthority(Long divisionId, Long employeeId) throws IOExcep
     if (employee != null) {
 
         if((employee.getSignatureImage() == null))
-            throw new ImageNotFoundException("Signature Image is not found for this Employee");
+            throw new ImageNotFoundException("Signature Image is not found for this employee.");
         else if((division.getStampImage() == null))
-            throw new ImageNotFoundException("Stamp Image is not found for this Division");
+            throw new ImageNotFoundException("Stamp Image is not found for this division.");
         else {
 
             AuthorityDB authorityD = new AuthorityDB( division,employee, true);
@@ -75,7 +75,7 @@ public AuthorityDB addAuthority(Long divisionId, Long employeeId) throws IOExcep
 
     }
     else
-        throw new NoSuchUserExistsException("No Such Employee exists!!");
+        throw new NoSuchUserExistsException("No such employee exists!");
 
 }
 
@@ -96,7 +96,7 @@ public AuthorityDB updateAuthority(Long id, Boolean isActive) {
 
     AuthorityDB oldAuthority = authorityRepo.findById(id).orElse(null);
     if (oldAuthority == null)
-        throw new NoSuchUserExistsException("No Such Authority exists!!");
+        throw new NoSuchUserExistsException("No such authority exists!");
     else {
             oldAuthority.setIsActive(isActive);
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -112,14 +112,14 @@ public AuthorityDB updateAuthority(Long id, Boolean isActive) {
 
 
 public AuthorityDB findAuthorityById(Long id){
-    return authorityRepo.findById(id).orElseThrow(() -> new NoSuchUserExistsException("Authority By id "+ id + " was not found"));
+    return authorityRepo.findById(id).orElseThrow(() -> new NoSuchUserExistsException("Authority by id "+ id + " was not found"));
 }
 
 public String deleteAuthority(Long id){
 
     AuthorityDB oldAuthority = authorityRepo.findById(id).orElse(null);
     if (oldAuthority == null)
-        throw new NoSuchUserExistsException("No Such Authority exists!!");
+        throw new NoSuchUserExistsException("No such authority exists!");
     else {
         authorityRepo.deleteById(id);
 

@@ -45,20 +45,21 @@ public Division addDivision(Division division, MultipartFile stamp, Long parentI
     List<Division> divByName = divisionRepository.findDivisionByName(division.getName());
     for (int i=0; i < divByName.size(); i++){
         if(divByName != null && divByName.get(i).getParent().getId() == parentId)
-            throw new UserAlreadyExistsException("Division Already exists!!");
+            throw new UserAlreadyExistsException("Division already exists!");
     }
 
         if (existingDivision != null)
-            throw new UserAlreadyExistsException("Division Already exists!!");
+            throw new UserAlreadyExistsException("Division already exists!");
         else {
             if(parentId != null && parentId != 0){
                 Division parent = divisionRepository.findById(parentId).orElse(null);
                 if (parent == null)
-                    throw new NoSuchUserExistsException("No Such Division exists!!");
-                else if (parent.getName() == division.getName()) {
-                    throw new NoSuchUserExistsException("Division Name And Parent Cannot be the same.");
+                    throw new NoSuchUserExistsException("No Such Division exists!");
+                else if (parent.getName().equals(division.getName())) {
+                    throw new NoSuchUserExistsException("The division name and parent division name cannot be the same.");
 
                 } else {
+
                     savedD.setParent(parent);
                 }
             }
@@ -95,13 +96,13 @@ public Division updateDivision(Division division, MultipartFile stampImage, Long
     List<Division> divByName = divisionRepository.findDivisionByName(division.getName());
 
     if (oldDivision == null)
-        throw new NoSuchUserExistsException("No Such Division exists!!");
+        throw new NoSuchUserExistsException("No such division exists!");
     else {
         oldDivision.setName(division.getName());
         if(parentId != null){
             Division parent = divisionRepository.findById(parentId).orElse(null);
             if (parent == null)
-                throw new NoSuchUserExistsException("Parent: No Such Division exists!!");
+                throw new NoSuchUserExistsException("Parent: No such division exists!");
             else {
                 oldDivision.setParent(parent);
             }
@@ -150,7 +151,7 @@ public String deleteDivision(Long id){
 
     Division existingDivision = divisionRepository.findById(id).orElse(null);
     if (existingDivision == null)
-        throw new NoSuchUserExistsException("No Such Division exists!!");
+        throw new NoSuchUserExistsException("No such division exists!");
     else {
         List<Division> childDivision = divisionRepository.findDivisionByParent(existingDivision);
         List<Employee> employeesInDiv  =  employeeRepository.findEmployeeByDivision(existingDivision);
@@ -159,9 +160,9 @@ public String deleteDivision(Long id){
 
             return "Record deleted Successfully";
         }else if (!childDivision.isEmpty()){
-            throw new NoSuchUserExistsException("Division with child can't be deleted. First delete the child divisions");
+            throw new NoSuchUserExistsException("A division with a child can't be deleted. First, delete the child divisions.");
         }else {
-            throw new NoSuchUserExistsException("Division with employee can't be deleted. First delete employees belong to this division.");
+            throw new NoSuchUserExistsException("A division with an employee can't be deleted. First-delete employees belong to this division.");
         }
 
     }
