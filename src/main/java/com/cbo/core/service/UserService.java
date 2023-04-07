@@ -88,7 +88,7 @@ public class UserService {
         }
         else
             throw new UserAlreadyExistsException(
-                    "User already exists!!");
+                    "User already exists!");
 
     }
 
