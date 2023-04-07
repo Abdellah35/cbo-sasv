@@ -107,23 +107,21 @@ public Division updateDivision(Division division, MultipartFile stampImage, Long
                 oldDivision.setParent(parent);
             }
         }
+        if(oldDivision.getStampImage() != null){
+            try{
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+                LocalDateTime now = LocalDateTime.now();
 
-        if(stampImage != null){
-            if(oldDivision.getStampImage() != null){
-                try{
+                Path source = Paths.get("user-photos/division/"+ oldDivision.getId() +"/"+ oldDivision.getStampImage());
+                Files.move(source, source.resolveSibling("old_"+dtf.format(now)+"_"+oldDivision.getStampImage()));
 
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
-                    LocalDateTime now = LocalDateTime.now();
-
-                    Path source = Paths.get("user-photos/division/"+ oldDivision.getId() +"/"+ oldDivision.getStampImage());
-                    Files.move(source, source.resolveSibling("old_"+dtf.format(now)+"_"+oldDivision.getStampImage()));
-
-                } catch (Exception e) {
-                    throw new ResourceNotFoundException(e.getMessage());
-                }
-
-
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
+
+
+        }
+        if(stampImage != null){
             try{
                 oldDivision.setStampImage(division.getStampImage());
                 Division weSave = divisionRepository.save(oldDivision);
@@ -132,7 +130,7 @@ public Division updateDivision(Division division, MultipartFile stampImage, Long
                 FileUploadUtil.saveFile(uploadDir, division.getStampImage(), stampImage);
                 return weSave;
             } catch (Exception e) {
-                throw new ResourceNotFoundException(e.getMessage());
+                throw new RuntimeException(e);
             }
 
         }else{
