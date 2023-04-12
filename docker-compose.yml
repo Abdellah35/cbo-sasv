@@ -1,9 +1,9 @@
 version: '3.1'
 services:
   API:
-    image: 'signatureandstampverification'
+    image: 'signatureandstampverification.jar'
     ports:
-      - "8086:8086"
+      - "8095:8095"
     depends_on:
       PostgreSQL:
         condition: service_healthy

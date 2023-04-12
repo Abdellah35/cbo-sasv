@@ -33,6 +33,8 @@ public class Employee {
     private String phoneNumber;
     private String signatureImage;
 
+    private String gender;
+
     private String birthDate;
     @ManyToOne
     private Division division;

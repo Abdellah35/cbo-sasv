@@ -11,6 +11,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class VisitorLogger implements HandlerInterceptor {
@@ -40,6 +41,9 @@ public class VisitorLogger implements HandlerInterceptor {
         final String requestMethod = HttpRequestResponseUtils.getRequestMethod();
         final LocalDateTime timestamp = LocalDateTime.now();
 
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        DateTimeFormatter timef = DateTimeFormatter.ofPattern("HH:mm:ss");
+
         Visitor visitor = new Visitor();
         visitor.setAppUser(HttpRequestResponseUtils.getLoggedInUser());
         visitor.setIp(ip);
@@ -49,10 +53,11 @@ public class VisitorLogger implements HandlerInterceptor {
         visitor.setQueryString(queryString);
         visitor.setRefererPage(refererPage);
         visitor.setUserAgent(userAgent);
-        visitor.setLoggedTime(timestamp.toString());
+        visitor.setLoggedTimetime(timef.format(timestamp));
         visitor.setUniqueVisit(true);
         visitor.setApplication(appName);
-
+        visitor.setLoggedTime(dtf.format(timestamp));
+        System.out.println(timef.format(timestamp));
         visitorService.saveVisitorInfo(visitor);
 
         return true;

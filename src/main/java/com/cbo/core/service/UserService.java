@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -75,6 +77,10 @@ public class UserService {
                 Employee employee = employeeService.findEmployeeById(user.getEmployee().getId().longValue());
                 user.setEmployee(employee);
             }
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            LocalDateTime now = LocalDateTime.now();
+            user.setCreatedAt(dtf.format(now));
+
 
 
             Set<Role> roles = new HashSet<>();

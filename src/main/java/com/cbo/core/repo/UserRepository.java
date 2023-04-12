@@ -24,5 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.username = ?1")
     public User findByUserName(String username);
 
+    @Query("SELECT u FROM User u WHERE u.createdAt = ?1")
+    public List<User> findByMonth(String createdAt);
+
     Optional<Object> findByUsername(String username);
 }

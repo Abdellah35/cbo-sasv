@@ -33,6 +33,7 @@ public class Visitor {
     private String queryString;
     private String refererPage;
     private String userAgent;
+    private String loggedTimetime;
     private String loggedTime;
     private boolean uniqueVisit;
 }

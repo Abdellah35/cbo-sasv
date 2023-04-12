@@ -40,7 +40,7 @@ public class EmployeeController {
     @ApiOperation(value = "List all Employees",
             notes = "List of all Employees",
             response = Employee.class)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','DIRECTOR')")
     public ResponseEntity<List<Employee>> getAllEmployee(){
         List<Employee> employees = employeeService.findAllEmployee();
         return ResponseEntity.ok(employees);
@@ -52,7 +52,7 @@ public class EmployeeController {
     @ApiOperation(value = "Finds Employees by id",
             notes = "Provide an id to look up specific employee from the Employee table",
             response = Employee.class)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','DIRECTOR')")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Long id){
         Employee specEmpl = employeeService.findEmployeeById(id);
 
@@ -76,7 +76,8 @@ public class EmployeeController {
                                                 @RequestParam(name="phoneNumber", required = false) String phoneNumber,
                                                 @RequestParam("divisionId") String divisionId,
                                                 @RequestParam("birthDate") Date birthDate,
-                                                @RequestParam("cboEmail") String cboEmail
+                                                @RequestParam("cboEmail") String cboEmail,
+                                                @RequestParam("gender") String gende
                                 ){
 
         System.out.println("in add employee");
@@ -90,6 +91,7 @@ public class EmployeeController {
         employee1.setGrandFatherName(grandFatherName);
         employee1.setPhoneNumber(phoneNumber);
         employee1.setCboEmail(cboEmail);
+        employee1.setGender(gende);
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -103,7 +105,7 @@ public class EmployeeController {
         }
 
         long l = 0L;
-        if(!divisionId.equals("")){
+        if(!divisionId.equals("") && !divisionId.isEmpty() && !divisionId.equals("undefined")){
             l=Long.parseLong(divisionId);
         }
         Employee newEmp=  employeeService.addEmployee(employee1, signatureImage, l);
@@ -132,7 +134,8 @@ public class EmployeeController {
                                @RequestParam("phoneNumber") String phoneNumber,
                                @RequestParam("id") String id,
                                @RequestParam("divisionId") String divisionId,
-                               @RequestParam("birthDate") Date birthDate){
+                               @RequestParam("birthDate") Date birthDate,
+                               @RequestParam("gender") String gender){
 
         Employee employee1 = new Employee();
         if(signatureImage != null){
@@ -140,7 +143,7 @@ public class EmployeeController {
             employee1.setSignatureImage(signatureName);
         }
         long l = 0L;
-        if(!divisionId.equals("")){
+        if(!divisionId.equals("") && !divisionId.isEmpty() && !divisionId.equals("undefined")){
             l=Long.parseLong(divisionId);
         }
         employee1.setId(Long.parseLong(id));
@@ -150,6 +153,7 @@ public class EmployeeController {
         employee1.setFatherName(fatherName);
         employee1.setGrandFatherName(grandFatherName);
         employee1.setPhoneNumber(phoneNumber);
+        employee1.setGender(gender);
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
         System.out.println(formatter.format(birthDate));

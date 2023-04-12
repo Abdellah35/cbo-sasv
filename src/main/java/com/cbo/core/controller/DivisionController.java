@@ -37,7 +37,7 @@ public class DivisionController {
     @ApiOperation(value = "List all Divisions",
             notes = "List of all available Divisions",
             response = Division.class)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','DIRECTOR')")
     public ResponseEntity<List<Division>> getAllDivision(){
         List<Division> divisions = divisionService.findAllDivision();
         return ResponseEntity.ok(divisions);
@@ -49,7 +49,7 @@ public class DivisionController {
     @ApiOperation(value = "Finds Division by id",
             notes = "Provide an id to look up specific division from the Division table",
             response = Division.class)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','DIRECTOR')")
     public ResponseEntity<Division> getDivisionById(@PathVariable("id") Long id){
 
         Division getDiv =  divisionService.findDivisionById(id);
@@ -92,7 +92,7 @@ public class DivisionController {
 
 
         long l = 0L;
-        if(!parentId.equals("")){
+        if(!parentId.equals("") && !parentId.isEmpty() && !parentId.equals("undefined")){
             l=Long.parseLong(parentId);
         }
 
@@ -128,7 +128,7 @@ public class DivisionController {
         division.setId(Long.parseLong(id));
 
         long l = 0L;
-        if(!parentId.equals("")){
+        if(!parentId.equals("") && !parentId.isEmpty() && !parentId.equals("undefined")){
             l=Long.parseLong(parentId);
         }
         divisionService.updateDivision(division, stampImage,l);

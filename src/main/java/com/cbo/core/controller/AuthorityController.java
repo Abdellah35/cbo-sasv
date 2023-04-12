@@ -3,7 +3,9 @@ package com.cbo.core.controller;
 import com.cbo.core.exception.ImageNotFoundException;
 import com.cbo.core.model.*;
 import com.cbo.core.response.ImageRes;
+import com.cbo.core.response.dashboard;
 import com.cbo.core.service.AuthorityDbService;
+import com.sun.java.swing.plaf.windows.WindowsBorders;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -56,7 +58,7 @@ public class AuthorityController {
     @ApiOperation(value = "Finds Authority by id",
             notes = "Provide an id to look up specific Authority from the Authority table",
             response = AuthorityDB.class)
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','DIRECTOR')")
     public ResponseEntity<AuthorityDB> getAuthorityById(@PathVariable("id") Long id){
 
         AuthorityDB getAuth = authorityDbService.findAuthorityById(id);
@@ -112,7 +114,7 @@ public class AuthorityController {
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     public ImageRes getImage(@PathVariable("id") Long id) throws IOException {
         AuthorityDB autho = authorityDbService.findAuthorityById(id);
-        if(autho.getIsActive()){
+
             ImageRes imgRes = new ImageRes();
             BufferedImage stampImage = ImageIO.read(new File("user-photos/division/"+ autho.getDivision().getId() +"/"+ autho.getDivision().getStampImage()));
             ByteArrayOutputStream stbos = new ByteArrayOutputStream();
@@ -132,9 +134,14 @@ public class AuthorityController {
             System.out.println(imgRes.getSignature());
             System.out.println(imgRes.getStamp());
             return imgRes;
-        }
-        else {
-            throw new ImageNotFoundException("Authority with Id: "+id + " is not Active.");
-        }
+
+    }
+
+    @GetMapping(value = "/dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<dashboard> getDashData(){
+
+        dashboard nr = authorityDbService.getdashData();
+        return ResponseEntity.ok(nr);
     }
 }

@@ -28,6 +28,8 @@ public class User {
     private String password;
     @Column(name = "isActive")
     private boolean active;
+    @Column(name = "createdAt")
+    private String createdAt;
     @Column(name = "username",unique = true, nullable = false, length = 20)
     @ApiModelProperty(notes = "Unique userName for the user")
     private String username;

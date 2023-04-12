@@ -97,7 +97,7 @@ public Employee updateEmployee(Employee employee, MultipartFile signatureImage, 
         oldEmployee.setGrandFatherName(employee.getGrandFatherName());
         oldEmployee.setPosition(employee.getPosition());
         oldEmployee.setPhoneNumber(employee.getPhoneNumber());
-
+        oldEmployee.setGender(employee.getGender());
         if((oldEmployee.getSignatureImage() != null) && (signatureImage != null)){
             try{
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
@@ -109,8 +109,6 @@ public Employee updateEmployee(Employee employee, MultipartFile signatureImage, 
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-
-
         }
         if(signatureImage != null){
             oldEmployee.setSignatureImage(employee.getSignatureImage());
@@ -122,12 +120,9 @@ public Employee updateEmployee(Employee employee, MultipartFile signatureImage, 
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
         } else{
             employeeRepository.save(oldEmployee);
-
         }
-
         employeeRepository.save(oldEmployee);
 
         return oldEmployee;
@@ -138,7 +133,6 @@ public Employee updateEmployee(Employee employee, MultipartFile signatureImage, 
 public Employee findEmployeeById(Long id){
     return employeeRepository.findById(id).orElseThrow(() -> new NoSuchUserExistsException("NO Employee PRESENT WITH ID = " + id));
 }
-
 
 public String deleteEmployee(Long id){
 
