@@ -98,31 +98,36 @@ public Employee updateEmployee(Employee employee, MultipartFile signatureImage, 
         oldEmployee.setPosition(employee.getPosition());
         oldEmployee.setPhoneNumber(employee.getPhoneNumber());
         oldEmployee.setGender(employee.getGender());
-        if((oldEmployee.getSignatureImage() != null) && (signatureImage != null)){
-            try{
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
-                LocalDateTime now = LocalDateTime.now();
-
-                Path source = Paths.get("user-photos/employee/"+ oldEmployee.getId() +"/"+ oldEmployee.getSignatureImage());
-                Files.move(source, source.resolveSibling("old_"+dtf.format(now)+"_"+oldEmployee.getSignatureImage()));
-
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
         if(signatureImage != null){
-            oldEmployee.setSignatureImage(employee.getSignatureImage());
-            Employee finalEmp = employeeRepository.save(oldEmployee);
-            try{
-                String uploadDir = "user-photos/employee/" + finalEmp.getId();
-                System.out.println(uploadDir);
-                FileUploadUtil.saveFile(uploadDir, employee.getSignatureImage(), signatureImage);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        } else{
-            employeeRepository.save(oldEmployee);
+
+                if(oldEmployee.getSignatureImage() != null){
+
+                    try{
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+                        LocalDateTime now = LocalDateTime.now();
+
+                        Path source = Paths.get("user-photos/employee/"+ oldEmployee.getId() +"/"+ oldEmployee.getSignatureImage());
+                        Files.move(source, source.resolveSibling("old_"+dtf.format(now)+"_"+oldEmployee.getSignatureImage()));
+                        try{
+
+                            String uploadDir = "user-photos/employee/" + oldEmployee.getId();
+                            System.out.println(uploadDir);
+                            FileUploadUtil.saveFile(uploadDir, employee.getSignatureImage(), signatureImage);
+                            oldEmployee.setSignatureImage(employee.getSignatureImage());
+                            Employee finalEmp = employeeRepository.save(oldEmployee);
+
+                            return finalEmp;
+                        }catch (IOException e) {
+                            throw new ResourceNotFoundException("Failed on saving image file!");
+                        }
+                    } catch (Exception e) {
+                        throw new ResourceNotFoundException("Failed on renaming old image file!");
+                    }
+                }
+
         }
+
+
         employeeRepository.save(oldEmployee);
 
         return oldEmployee;

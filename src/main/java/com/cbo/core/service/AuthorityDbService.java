@@ -3,6 +3,7 @@ package com.cbo.core.service;
 import com.cbo.core.exception.*;
 import com.cbo.core.model.*;
 import com.cbo.core.repo.*;
+import com.cbo.core.response.ByRole;
 import com.cbo.core.response.RecentUsers;
 import com.cbo.core.response.dashboard;
 import org.springframework.stereotype.Service;
@@ -10,10 +11,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class AuthorityDbService {
@@ -170,6 +168,27 @@ public class AuthorityDbService {
         //today visited page
         List<Visitor> vs = visitorRepository.findByMonth(dtf.format(now));
         dsdata.setPageViewToday(vs.size());
+        String role;
+        int admin = 0;
+        int nuser = 0;
+        int directr = 0;
+        for (int j = vs.size(); j > 0; j--) {
+            if (vs.get(j - 1).getAppUser() != null) {
+
+                role = vs.get(j - 1).getAppUser().split(",")[2].split(":")[2].replace("\"", "").replace("}]","");
+
+                if(role.equals("ROLE_ADMIN")){
+                    admin += 1;
+                } else if (role.equals("ROLE_DIRECTOR")) {
+                    directr += 1;
+                }else{
+                    nuser += 1;
+                }
+            }
+
+        }
+
+        dsdata.setRoleVisit(new ByRole(admin,directr,nuser));
 
         //today logged users
         List<Visitor> uniqueUsers = visitorRepository.findByVisitors(dtf.format(now), "/auth/login");

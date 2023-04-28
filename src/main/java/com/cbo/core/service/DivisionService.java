@@ -90,7 +90,7 @@ public List<Division> findAllDivision(){
 }
 
 
-public Division updateDivision(Division division, MultipartFile stampImage, Long parentId){
+public Division updateDivision(Division division, MultipartFile stampImage, Long parentId) throws NoSuchFieldException {
 
     Division oldDivision = divisionRepository.findById(division.getId()).orElse(null);
     List<Division> divByName = divisionRepository.findDivisionByName(division.getName());
@@ -99,7 +99,7 @@ public Division updateDivision(Division division, MultipartFile stampImage, Long
         throw new NoSuchUserExistsException("No such division exists!");
     else {
         oldDivision.setName(division.getName());
-        if(parentId != null){
+        if (parentId != null) {
             Division parent = divisionRepository.findById(parentId).orElse(null);
             if (parent == null)
                 throw new NoSuchUserExistsException("Parent: No such division exists!");
@@ -107,38 +107,36 @@ public Division updateDivision(Division division, MultipartFile stampImage, Long
                 oldDivision.setParent(parent);
             }
         }
-        if(oldDivision.getStampImage() != null){
-            try{
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
-                LocalDateTime now = LocalDateTime.now();
+        if (stampImage != null) {
+                if(oldDivision.getStampImage() != null){
+                    try{
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+                        LocalDateTime now = LocalDateTime.now();
 
-                Path source = Paths.get("user-photos/division/"+ oldDivision.getId() +"/"+ oldDivision.getStampImage());
-                Files.move(source, source.resolveSibling("old_"+dtf.format(now)+"_"+oldDivision.getStampImage()));
+                        Path source = Paths.get("user-photos/division/"+ oldDivision.getId() +"/"+ oldDivision.getStampImage());
+                        Files.move(source, source.resolveSibling("old_"+dtf.format(now)+"_"+oldDivision.getStampImage()));
+                        try {
 
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-
-        }
-        if(stampImage != null){
-            try{
-                oldDivision.setStampImage(division.getStampImage());
-                Division weSave = divisionRepository.save(oldDivision);
-                String uploadDir = "user-photos/division/" + weSave.getId();
-                System.out.println(uploadDir);
-                FileUploadUtil.saveFile(uploadDir, division.getStampImage(), stampImage);
-                return weSave;
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-        }else{
+                            String uploadDir = "user-photos/division/" + oldDivision.getId();
+                            System.out.println(uploadDir);
+                            FileUploadUtil.saveFile(uploadDir, division.getStampImage(), stampImage);
+                            oldDivision.setStampImage(division.getStampImage());
+                            Division weSave = divisionRepository.save(oldDivision);
+                            return weSave;
+                        } catch (Exception e) {
+                            throw new NoSuchFieldException("Failed on saving image file!");
+                        }
+                    } catch (Exception e) {
+                        throw new NoSuchFieldException("Failed on renaming old image file!");
+                    }
+                }
+        } else {
             Division weSave = divisionRepository.save(oldDivision);
             return weSave;
-
         }
     }
+    Division weSave = divisionRepository.save(oldDivision);
+    return weSave;
 }
 
 

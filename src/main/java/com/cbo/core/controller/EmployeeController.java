@@ -120,7 +120,8 @@ public class EmployeeController {
 
     //This method used to update an existing Employee on database
     @PutMapping("/update")
-    @ApiOperation(value = "Update Existing Employee",
+    @ApiOperation(
+            value = "Update Existing Employee",
             notes = "All fields can be updated except Employee Id",
             response = Employee.class)
     @PreAuthorize("hasRole('ADMIN')")
@@ -155,19 +156,18 @@ public class EmployeeController {
         employee1.setPhoneNumber(phoneNumber);
         employee1.setGender(gender);
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-
         System.out.println(formatter.format(birthDate));
+
 
         employee1.setBirthDate(formatter.format(birthDate));
         employeeService.updateEmployee(employee1, signatureImage, l);
-
         return ResponseEntity.noContent().build();
     }
 
 
     //This method used to delete an employee with the given id
     @DeleteMapping("/delete/{id}")
-    @ApiOperation(value = "Delete Existing Employee",
+@ApiOperation(value = "Delete Existing Employee",
             notes = "Delete Employee by Id",
             response = Employee.class)
     @PreAuthorize("hasRole('ADMIN')")

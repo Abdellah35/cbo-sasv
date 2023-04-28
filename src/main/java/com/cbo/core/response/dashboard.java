@@ -11,6 +11,8 @@ public class dashboard {
     Integer activeAuth;
     Integer allAuth;
     Set<RecentUsers> recentUsers;
+
+    ByRole roleVisit;
     Integer todayLogin;
     Integer pageViewToday;
     Integer femaleUsers;
@@ -23,7 +25,7 @@ public class dashboard {
     public dashboard() {
     }
 
-    public dashboard(List<Integer> newUsers, Integer allUsers, Integer activeAuth, Integer allAuth, Set<RecentUsers> recentUsers, Integer todayLogin, Integer pageViewToday, Integer femaleUsers, Integer allEmployee, Integer allDivision) {
+    public dashboard(ByRole roleVisit, List<Integer> newUsers, Integer allUsers, Integer activeAuth, Integer allAuth, Set<RecentUsers> recentUsers, Integer todayLogin, Integer pageViewToday, Integer femaleUsers, Integer allEmployee, Integer allDivision) {
         this.newUsers = newUsers;
         this.allUsers = allUsers;
         this.activeAuth = activeAuth;
@@ -34,6 +36,15 @@ public class dashboard {
         this.femaleUsers = femaleUsers;
         this.allEmployee = allEmployee;
         this.allDivision = allDivision;
+        this.roleVisit = roleVisit;
+    }
+
+    public ByRole getRoleVisit() {
+        return roleVisit;
+    }
+
+    public void setRoleVisit(ByRole roleVisit) {
+        this.roleVisit = roleVisit;
     }
 
     public void setNewUsers(List<Integer> newUsers) {

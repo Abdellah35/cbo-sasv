@@ -111,7 +111,7 @@ public class AuthorityController {
 
 
     @GetMapping(value = "/sid/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','DIRECTOR')")
     public ImageRes getImage(@PathVariable("id") Long id) throws IOException {
         AuthorityDB autho = authorityDbService.findAuthorityById(id);
 

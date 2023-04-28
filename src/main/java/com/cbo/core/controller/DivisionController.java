@@ -115,7 +115,7 @@ public class DivisionController {
                                        @RequestParam(name="stampImage", required = false)  MultipartFile stampImage ,
                                                  @RequestParam("name") String name,
                                                  @RequestParam("parent") String parentId,
-                                                 @RequestParam("id") String id){
+                                                 @RequestParam("id") String id) throws NoSuchFieldException {
 
 
         Division division = new Division();
