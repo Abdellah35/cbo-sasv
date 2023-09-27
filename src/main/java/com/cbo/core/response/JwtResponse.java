@@ -1,6 +1,6 @@
 package com.cbo.core.response;
 
-import com.cbo.core.model.User;
+import com.cbo.core.persistence.model.User;
 
 public class JwtResponse {
     private User user;

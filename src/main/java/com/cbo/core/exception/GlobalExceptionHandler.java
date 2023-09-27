@@ -1,6 +1,6 @@
 package com.cbo.core.exception;
 
-import com.cbo.core.model.ErrorResponse;
+import com.cbo.core.persistence.model.ErrorResponse;
 import com.cbo.core.response.ImageUploadResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +20,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ImageUploadResponse<Object>>
-    handleBindException(BindException bindException){
+    handleBindException(BindException bindException) {
 
-        Map<String,String> errorMap=new HashMap<>();
+        Map<String, String> errorMap = new HashMap<>();
 
         bindException.getAllErrors().stream().
                 forEach(objectError -> {
                     errorMap.put(
-                            ((FieldError)objectError).getField(),
+                            ((FieldError) objectError).getField(),
                             objectError.getDefaultMessage());
                 });
 
@@ -42,8 +42,7 @@ public class GlobalExceptionHandler {
             = NoSuchUserExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody ErrorResponse
-    handleException(NoSuchUserExistsException ex)
-    {
+    handleException(NoSuchUserExistsException ex) {
         return new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(), ex.getMessage());
     }
@@ -52,8 +51,7 @@ public class GlobalExceptionHandler {
             = ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody ErrorResponse
-    handleException(ResourceNotFoundException ex)
-    {
+    handleException(ResourceNotFoundException ex) {
         return new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(), ex.getMessage());
     }
@@ -62,8 +60,7 @@ public class GlobalExceptionHandler {
             = UserAlreadyExistsException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public @ResponseBody ErrorResponse
-    handleException(UserAlreadyExistsException ex)
-    {
+    handleException(UserAlreadyExistsException ex) {
         return new ErrorResponse(
                 HttpStatus.CONFLICT.value(), ex.getMessage());
     }
@@ -72,17 +69,16 @@ public class GlobalExceptionHandler {
             = ImageNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody ErrorResponse
-    handleException(ImageNotFoundException ex)
-    {
+    handleException(ImageNotFoundException ex) {
         return new ErrorResponse(
                 HttpStatus.NO_CONTENT.value(), ex.getMessage());
     }
+
     @ExceptionHandler(value
             = IncorrectUsernameOrPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public @ResponseBody ErrorResponse
-    handleException(IncorrectUsernameOrPasswordException ex)
-    {
+    handleException(IncorrectUsernameOrPasswordException ex) {
         return new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }

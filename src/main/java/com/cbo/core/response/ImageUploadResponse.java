@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 public class ImageUploadResponse<T> {
 
-	private String message;
+    private String message;
     private T response;
 
 }

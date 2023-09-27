@@ -1,7 +1,7 @@
 package com.cbo.core.service;
 
-import com.cbo.core.model.Visitor;
-import com.cbo.core.repo.VisitorRepository;
+import com.cbo.core.persistence.model.Visitor;
+import com.cbo.core.persistence.repository.VisitorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +17,9 @@ public class VisitorService {
         return repository.save(visitor);
     }
 
-    public List<Visitor> allVisitors(){
+    public List<Visitor> allVisitors() {
         return repository.findAll();
     }
-
 
 
 }

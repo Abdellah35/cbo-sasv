@@ -8,13 +8,13 @@ import javax.validation.ConstraintValidatorContext;
 public class FileSizeTypeValidator
         implements ConstraintValidator<FileSize, MultipartFile> {
 
-    private static final Integer MB=1024*1024;
+    private static final Integer MB = 1024 * 1024;
 
     private long maxSizeInMB;
 
     @Override
     public void initialize(FileSize fileSize) {
-        this.maxSizeInMB=fileSize.maxSizeInMB();
+        this.maxSizeInMB = fileSize.maxSizeInMB();
     }
 
     @Override
@@ -22,7 +22,7 @@ public class FileSizeTypeValidator
                            ConstraintValidatorContext
                                    constraintValidatorContext) {
 
-        if(multipartFile==null)
+        if (multipartFile == null)
             return true;
 
 
@@ -33,8 +33,9 @@ public class FileSizeTypeValidator
             result = false;
         }
         System.out.println(result);
-        return (multipartFile.getSize()<maxSizeInMB*MB & result);
+        return (multipartFile.getSize() < maxSizeInMB * MB & result);
     }
+
     private boolean isSupportedContentType(String contentType) {
         return contentType.equals("image/jpg")
                 || contentType.equals("image/jpeg");

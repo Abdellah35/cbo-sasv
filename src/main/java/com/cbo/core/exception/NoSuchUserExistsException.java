@@ -5,9 +5,10 @@ public class NoSuchUserExistsException
 
     private String message;
 
-    public NoSuchUserExistsException() {}
-    public NoSuchUserExistsException(String msg)
-    {
+    public NoSuchUserExistsException() {
+    }
+
+    public NoSuchUserExistsException(String msg) {
         super(msg);
         this.message = msg;
     }

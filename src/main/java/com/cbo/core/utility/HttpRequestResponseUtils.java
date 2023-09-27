@@ -1,6 +1,6 @@
 package com.cbo.core.utility;
 
-import com.cbo.core.model.User;
+import com.cbo.core.persistence.model.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -14,9 +14,10 @@ public final class HttpRequestResponseUtils {
 
     private HttpRequestResponseUtils() {
     }
-    private static final String[] IP_HEADER_CANDIDATES = { "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
+
+    private static final String[] IP_HEADER_CANDIDATES = {"X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
             "HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP", "HTTP_CLIENT_IP",
-            "HTTP_FORWARDED_FOR", "HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR" };
+            "HTTP_FORWARDED_FOR", "HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR"};
 
     public static String getClientIpAddress() {
 
@@ -49,6 +50,7 @@ public final class HttpRequestResponseUtils {
 
         return request.getRequestURL().toString();
     }
+
     public static String getRequestUri() {
         if (RequestContextHolder.getRequestAttributes() == null) {
             return "";
@@ -57,6 +59,7 @@ public final class HttpRequestResponseUtils {
                 .getRequest();
         return request.getRequestURI();
     }
+
     public static String getRefererPage() {
 
         if (RequestContextHolder.getRequestAttributes() == null) {
@@ -116,7 +119,8 @@ public final class HttpRequestResponseUtils {
                 && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
                 && !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
 
-            org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            //User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User user = null;
             ObjectMapper mapper = new ObjectMapper();
 
             try {

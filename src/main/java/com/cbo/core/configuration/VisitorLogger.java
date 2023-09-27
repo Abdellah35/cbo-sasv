@@ -1,6 +1,6 @@
 package com.cbo.core.configuration;
 
-import com.cbo.core.model.Visitor;
+import com.cbo.core.persistence.model.Visitor;
 import com.cbo.core.service.VisitorService;
 import com.cbo.core.utility.HttpRequestResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;

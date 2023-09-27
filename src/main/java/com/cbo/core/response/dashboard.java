@@ -1,6 +1,5 @@
 package com.cbo.core.response;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +18,6 @@ public class dashboard {
     Integer allEmployee;
 
     Integer allDivision;
-
 
 
     public dashboard() {

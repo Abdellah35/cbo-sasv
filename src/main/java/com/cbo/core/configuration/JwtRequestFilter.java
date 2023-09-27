@@ -1,10 +1,7 @@
 package com.cbo.core.configuration;
 
-import com.cbo.core.exception.IncorrectUsernameOrPasswordException;
-import com.cbo.core.service.JwtService;
-import com.cbo.core.utility.JwtUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.cbo.core.service.impl.UserDetailsServiceImpl;
+import com.cbo.core.utility.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,46 +16,45 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static java.time.LocalTime.now;
-
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
+    // Inject the JwtUtils and UserDetailsServiceImpl beans
     @Autowired
-    private JwtUtil jwtUtils;
-    @Autowired
-    private  JwtService userDetailsService;
-    private static final Logger logger  = LoggerFactory.getLogger(JwtRequestFilter.class);
+    private JwtUtils jwtUtils;
 
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        try {
-            final String header = request.getHeader("Authorization");
-            String jwtToken = null;
-            String username = null;
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // Get the authorization header from the request
+        String header = request.getHeader("Authorization");
 
-            if (header != null && header.startsWith("Bearer ")){
-                jwtToken = header.substring(7);
-            }
-            else {
-                System.out.println("JWT Token doesn't start with Bearer ");
-            }
+        // Check if the header is valid and starts with "Bearer "
+        if (header != null && header.startsWith("Bearer ")) {
+            // Get the token from the header
+            String token = header.substring(7);
 
-            if(jwtToken != null){
-                username = jwtUtils.getUserNameFromToken(jwtToken);
+            // Validate the token
+            if (jwtUtils.validateToken(token)) {
+                // Get the username from the token
+                String username = jwtUtils.getUsernameFromToken(token);
+
+                // Get the user details from the userDetailsService
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
-        } catch (Exception e) {
-            throw new IncorrectUsernameOrPasswordException("Incorrect username or password.");
-        }
-        filterChain.doFilter(request, response);
+                // Create an authentication object from the user details and token
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
+                // Set the authentication to the SecurityContext
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        }
+
+        // Continue the filter chain
+        filterChain.doFilter(request, response);
     }
 /*    private String parseJwt(HttpServletRequest request) {
         String jwt = jwtUtils.getJwtFromCookies(request);

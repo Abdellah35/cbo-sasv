@@ -1,147 +1,103 @@
 package com.cbo.core.controller;
 
-import com.cbo.core.exception.ImageNotFoundException;
-import com.cbo.core.model.*;
-import com.cbo.core.response.ImageRes;
-import com.cbo.core.response.dashboard;
-import com.cbo.core.service.AuthorityDbService;
-import com.sun.java.swing.plaf.windows.WindowsBorders;
-import io.swagger.annotations.ApiOperation;
+import com.cbo.core.constants.URIS;
+import com.cbo.core.dto.AuthorityDTO;
+import com.cbo.core.dto.ResultWrapper;
+import com.cbo.core.service.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponents;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/authority")
-public class AuthorityController {
-
-
-    private final AuthorityDbService authorityDbService;
+public class AuthorityController extends BaseApplicationController {
 
     @Autowired
-    public AuthorityController( AuthorityDbService authorityDbService) {
-        this.authorityDbService = authorityDbService;
+    private AuthorityService authorityService;
 
-    }
-    @ApiOperation(value = "List all Authorities",
-            notes = "List of all Authorities",
-            response = AuthorityDB.class)
+    @PostMapping(value = URIS.AUTHORITY_REGISTER, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('SASV_ADMIN')")
+    public ResponseEntity<ResultWrapper<AuthorityDTO>> registerAuthority(HttpEntity<AuthorityDTO> requestData) {
 
-    @GetMapping(path = "/all", produces=MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('ADMIN','USER','DIRECTOR')")
-    public List<AuthorityDB> getAllAuthority(){
-        return authorityDbService.findAllAuthority();
-    }
+        validateRequest(requestData);
 
-    @GetMapping(path = "/all/{isActive}")
-    @PreAuthorize("hasAnyRole('ADMIN','USER','DIRECTOR')")
-    public ResponseEntity<List<AuthorityDB>> getAllAuthorityByState(@PathVariable(required = false) boolean isActive){
-
-        List<AuthorityDB> allAuth = authorityDbService.findAllAuthorityByState(isActive);
-
-        return ResponseEntity.ok(allAuth);
+        ResultWrapper<AuthorityDTO> resultWrapper = new ResultWrapper<>();
+        AuthorityDTO authorityDTO = requestData.getBody();
+        if (authorityDTO != null) {
+            resultWrapper = authorityService.registerAuthority(authorityDTO);
+        }
+        return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/find/{id}", produces=MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Finds Authority by id",
-            notes = "Provide an id to look up specific Authority from the Authority table",
-            response = AuthorityDB.class)
-    @PreAuthorize("hasAnyRole('ADMIN','USER','DIRECTOR')")
-    public ResponseEntity<AuthorityDB> getAuthorityById(@PathVariable("id") Long id){
+    @GetMapping(value = URIS.AUTHORITY_LIST_ALL,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('SASV_ADMIN')")
+    public ResponseEntity<ResultWrapper<List<AuthorityDTO>>> listAllAuthorities() {
 
-        AuthorityDB getAuth = authorityDbService.findAuthorityById(id);
-        return ResponseEntity.ok(getAuth);
+        ResultWrapper<List<AuthorityDTO>> listAccounts = authorityService.findAllAuthorities();
+
+        return new ResponseEntity<>(listAccounts, HttpStatus.OK);
     }
 
+    @GetMapping(value = URIS.AUTHORITY_LIST_ACTIVE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    public ResponseEntity<ResultWrapper<List<AuthorityDTO>>> findAllActiveAuthorities() {
 
-    @PostMapping(path = "/add", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    @ApiOperation(value = "Add new Authority",
-        notes = "The new Added Authority must be exist in Employee Table",
-        response = AuthorityDB.class)
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<AuthorityDB> addAuthority(@RequestParam("divisionId") Long divisionId,
-                                    @RequestParam("employeeId") Long employeeId) throws IOException {
+        ResultWrapper<List<AuthorityDTO>> listAccounts = authorityService.findAllActiveAuthorities();
 
-        AuthorityDB newAuth =authorityDbService.addAuthority(divisionId, employeeId);
+        return new ResponseEntity<>(listAccounts, HttpStatus.OK);
+    }
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newAuth.getId()).toUri();
+    @PostMapping(value = URIS.AUTHORITY_BY_ID, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    public ResponseEntity<ResultWrapper<AuthorityDTO>> findAuthorityById(HttpEntity<AuthorityDTO> requestData) {
 
-        return ResponseEntity.created(location).body(newAuth);
+        ResultWrapper<AuthorityDTO> accountInfoById = authorityService.findAuthorityById(requestData.getBody());
+
+        return new ResponseEntity<>(accountInfoById, HttpStatus.OK);
     }
 
 
+    @PostMapping(value = URIS.AUTHORITY_UPDATE, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('SASV_ADMIN')")
+    public ResponseEntity<ResultWrapper<AuthorityDTO>> updateAuthority(HttpEntity<AuthorityDTO> requestData) {
 
-    @PutMapping(path = "/update")
-    @ApiOperation(value = "Update Existing Authority",
-            notes = "All fields can be updated except User Id",
-            response = AuthorityDB.class)
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> updateAuthority(@RequestParam("authId") Integer authId,
-                                          @RequestParam("isActive") Boolean isActive
-                                       ) throws IOException {
-        System.out.println("isActive " + isActive);
-        authorityDbService.updateAuthority( authId.longValue(), isActive);
+        validateRequest(requestData);
 
-        return ResponseEntity.noContent().build();
+        AuthorityDTO authorityDTO = requestData.getBody();
+        ResultWrapper<AuthorityDTO> resultWrapper = authorityService.updateAuthority(authorityDTO);
+        return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
+    }
+
+    @PostMapping(value = URIS.AUTHORITY_DELETE, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('SASV_ADMIN')")
+    public ResponseEntity<ResultWrapper<AuthorityDTO>> deleteAuthority(HttpEntity<AuthorityDTO> requestData) {
+
+        validateRequest(requestData);
+        AuthorityDTO authorityDTO = requestData.getBody();
+        ResultWrapper<AuthorityDTO> resultWrapper = authorityService.deleteAuthority(authorityDTO);
+
+        return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
     }
 
 
-    @DeleteMapping(path = "/delete/{id}",  produces=MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Delete Existing Authority",
-            notes = "Delete Authority by Id",
-            response = User.class)
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> deleteAuthority(@PathVariable("id") Long id){
-
-        authorityDbService.deleteAuthority(id);
-        return ResponseEntity.noContent().build();
-    }
-
-
-    @GetMapping(value = "/sid/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','USER','DIRECTOR')")
-    public ImageRes getImage(@PathVariable("id") Long id) throws IOException {
-        AuthorityDB autho = authorityDbService.findAuthorityById(id);
-
-            ImageRes imgRes = new ImageRes();
-            BufferedImage stampImage = ImageIO.read(new File("user-photos/division/"+ autho.getDivision().getId() +"/"+ autho.getDivision().getStampImage()));
-            ByteArrayOutputStream stbos = new ByteArrayOutputStream();
-            ImageIO.write(stampImage, "png", stbos );
-            byte [] stadata = stbos.toByteArray();
-
-            imgRes.setStamp(stadata);
-
-            BufferedImage sigImage = ImageIO.read(new File("user-photos/employee/"+ autho.getEmployee().getId() +"/"+ autho.getEmployee().getSignatureImage()));
-            ByteArrayOutputStream sibos = new ByteArrayOutputStream();
-            ImageIO.write(sigImage, "png", sibos );
-            byte [] sidata = sibos.toByteArray();
-
-            imgRes.setSignature(sidata);
-            imgRes.setEmployee(autho.getEmployee());
-            imgRes.setDivision(autho.getDivision());
-            System.out.println(imgRes.getSignature());
-            System.out.println(imgRes.getStamp());
-            return imgRes;
-
-    }
-
-    @GetMapping(value = "/dashboard")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<dashboard> getDashData(){
-
-        dashboard nr = authorityDbService.getdashData();
-        return ResponseEntity.ok(nr);
-    }
+//    @GetMapping(value = "/dashboard")
+//    @PreAuthorize("hasRole('SASV_ADMIN')")
+//    public ResponseEntity<dashboard> getDashData(){
+//
+//        dashboard nr = authorityDbService.getdashData();
+//        return ResponseEntity.ok(nr);
+//    }
 }
