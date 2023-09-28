@@ -12,10 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -35,22 +32,22 @@ public class ImageController {
     }
 
 
-    @PostMapping(value = URIS.UPLOAD_SIGNATURE, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(value = URIS.UPLOAD_SIGNATURE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     //@PreAuthorize("hasRole('SASV_ADMIN')")
-    public ResponseEntity<ResultWrapper<SignatureDTO>> addEmployeeSignature(HttpEntity<SignatureDTO> requestData) throws IOException {
+    public ResponseEntity<ResultWrapper<SignatureDTO>> addEmployeeSignature(@RequestAttribute  SignatureDTO signatureDTO) throws IOException {
 
 
-        ResultWrapper<SignatureDTO> resultWrapper= imageService.addEmployeeSignature(requestData.getBody());
+        ResultWrapper<SignatureDTO> resultWrapper= imageService.addEmployeeSignature(signatureDTO);
         return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
     }
 
-    @PostMapping(value = URIS.UPLOAD_STAMP, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PostMapping(value = URIS.UPLOAD_STAMP,
             produces = MediaType.APPLICATION_JSON_VALUE)
     //@PreAuthorize("hasRole('SASV_ADMIN')")
-    public ResponseEntity<ResultWrapper<StampDTO>> addStamp(HttpEntity<StampDTO> requestData) throws IOException {
+    public ResponseEntity<ResultWrapper<StampDTO>> addStamp(@RequestAttribute  StampDTO stampDTO) throws IOException {
 
-        ResultWrapper<StampDTO> resultWrapper= imageService.addStamp(requestData.getBody());
+        ResultWrapper<StampDTO> resultWrapper= imageService.addStamp(stampDTOg);
         return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
     }
 
