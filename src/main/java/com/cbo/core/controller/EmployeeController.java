@@ -21,7 +21,6 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-
     @GetMapping(value = URIS.EMPLOYEE_LIST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
