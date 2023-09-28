@@ -31,4 +31,8 @@ public class URIS {
 
     public static final String UPLOAD_STAMP = AUTHORITY + "stamp";
 
+    public static final String RETRIEVE_SIGNATURE_LIST = AUTHORITY + "signature/all";
+
+    public static final String RETRIEVE_STAMP_LIST = AUTHORITY + "stamp/all";
+
 }

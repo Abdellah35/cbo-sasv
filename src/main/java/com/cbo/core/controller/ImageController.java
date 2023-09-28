@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 public class ImageController {
 
     private ImageService imageService;
+
 
     @GetMapping(value = URIS.AUTHORITY_IMAGES_BY_ID)
     @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
@@ -49,6 +51,24 @@ public class ImageController {
     public ResponseEntity<ResultWrapper<StampDTO>> addStamp(HttpEntity<StampDTO> requestData) throws IOException {
 
         ResultWrapper<StampDTO> resultWrapper= imageService.addStamp(requestData.getBody());
+        return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
+    }
+
+    @GetMapping(value = URIS.RETRIEVE_SIGNATURE_LIST, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('SASV_ADMIN')")
+    public ResponseEntity<ResultWrapper<List<SignatureDTO>>> getAllSignatures(){
+
+        ResultWrapper<List<SignatureDTO>> resultWrapper= imageService.getAllSignatures();
+        return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
+    }
+
+    @GetMapping(value = URIS.RETRIEVE_STAMP_LIST, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('SASV_ADMIN')")
+    public ResponseEntity<ResultWrapper<List<StampDTO>>> getAllStamps(){
+
+        ResultWrapper<List<StampDTO>> resultWrapper= imageService.getAllStamps();
         return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
     }
 

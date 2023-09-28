@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Service("imageService")
 @Transactional
@@ -228,5 +229,22 @@ public class ImageServiceImpl implements ImageService {
         imgRes.setEmployee(autho.getEmployee());
 
         return imgRes;
+    }
+
+    @Override
+    public ResultWrapper<List<StampDTO>> getAllStamps() {
+
+        ResultWrapper<List<StampDTO>> resultWrapper = new ResultWrapper<>();
+        resultWrapper.setResult(StampMapper.INSTANCE.stampsToStampDTOs(stampRepository.findAll()));
+        resultWrapper.setStatus(true);
+        return resultWrapper;
+    }
+
+    @Override
+    public ResultWrapper<List<SignatureDTO>> getAllSignatures() {
+        ResultWrapper<List<SignatureDTO>> resultWrapper = new ResultWrapper<>();
+        resultWrapper.setResult(SignatureMapper.INSTANCE.signatureToSignatureDTOs(signatureRepository.findAll()));
+        resultWrapper.setStatus(true);
+        return resultWrapper;
     }
 }

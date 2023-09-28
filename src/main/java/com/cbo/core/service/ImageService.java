@@ -6,6 +6,7 @@ import com.cbo.core.dto.StampDTO;
 import com.cbo.core.response.ImageRes;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface ImageService {
     ResultWrapper<SignatureDTO> addEmployeeSignature(SignatureDTO signatureDTO) throws IOException;
@@ -21,4 +22,8 @@ public interface ImageService {
     ResultWrapper<StampDTO> getStampByProcessId(Long processId);
 
     ImageRes getImages(Long authorityId) throws IOException;
+
+    ResultWrapper<List<StampDTO>> getAllStamps();
+
+    ResultWrapper<List<SignatureDTO>> getAllSignatures();
 }
