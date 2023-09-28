@@ -23,7 +23,7 @@ public class SubProcessController {
 
     @GetMapping(value = URIS.Sub_PROCESS_LIST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
     public ResponseEntity<ResultWrapper<List<SubProcess>>> getSubProcesses() {
         ResultWrapper<List<SubProcess>> resultWrapper = subProcessService.findAllSubProcesses();
 
@@ -32,7 +32,7 @@ public class SubProcessController {
 
     @GetMapping(value = URIS.Sub_PROCESS_BY_ID, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
     public ResponseEntity<ResultWrapper<SubProcess>> getSubProcessById(@PathVariable("subProcessId") Long subProcessId) {
         ResultWrapper<SubProcess> resultWrapper = subProcessService.findSubProcessById(subProcessId);
 

@@ -24,7 +24,7 @@ public class AuthorityController extends BaseApplicationController {
 
     @PostMapping(value = URIS.AUTHORITY_REGISTER, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('SASV_ADMIN')")
+    //@PreAuthorize("hasRole('SASV_ADMIN')")
     public ResponseEntity<ResultWrapper<AuthorityDTO>> registerAuthority(HttpEntity<AuthorityDTO> requestData) {
 
         validateRequest(requestData);
@@ -39,7 +39,7 @@ public class AuthorityController extends BaseApplicationController {
 
     @GetMapping(value = URIS.AUTHORITY_LIST_ALL,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('SASV_ADMIN')")
+    //@PreAuthorize("hasRole('SASV_ADMIN')")
     public ResponseEntity<ResultWrapper<List<AuthorityDTO>>> listAllAuthorities() {
 
         ResultWrapper<List<AuthorityDTO>> listAccounts = authorityService.findAllAuthorities();
@@ -49,7 +49,7 @@ public class AuthorityController extends BaseApplicationController {
 
     @GetMapping(value = URIS.AUTHORITY_LIST_ACTIVE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
     public ResponseEntity<ResultWrapper<List<AuthorityDTO>>> findAllActiveAuthorities() {
 
         ResultWrapper<List<AuthorityDTO>> listAccounts = authorityService.findAllActiveAuthorities();
@@ -59,7 +59,7 @@ public class AuthorityController extends BaseApplicationController {
 
     @PostMapping(value = URIS.AUTHORITY_BY_ID, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
     public ResponseEntity<ResultWrapper<AuthorityDTO>> findAuthorityById(HttpEntity<AuthorityDTO> requestData) {
 
         ResultWrapper<AuthorityDTO> accountInfoById = authorityService.findAuthorityById(requestData.getBody());
@@ -70,7 +70,7 @@ public class AuthorityController extends BaseApplicationController {
 
     @PostMapping(value = URIS.AUTHORITY_UPDATE, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('SASV_ADMIN')")
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN')")
     public ResponseEntity<ResultWrapper<AuthorityDTO>> updateAuthority(HttpEntity<AuthorityDTO> requestData) {
 
         validateRequest(requestData);
@@ -82,7 +82,7 @@ public class AuthorityController extends BaseApplicationController {
 
     @PostMapping(value = URIS.AUTHORITY_DELETE, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('SASV_ADMIN')")
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN')")
     public ResponseEntity<ResultWrapper<AuthorityDTO>> deleteAuthority(HttpEntity<AuthorityDTO> requestData) {
 
         validateRequest(requestData);
@@ -94,7 +94,7 @@ public class AuthorityController extends BaseApplicationController {
 
 
 //    @GetMapping(value = "/dashboard")
-//    @PreAuthorize("hasRole('SASV_ADMIN')")
+//    //@PreAuthorize("hasRole('SASV_ADMIN')")
 //    public ResponseEntity<dashboard> getDashData(){
 //
 //        dashboard nr = authorityDbService.getdashData();

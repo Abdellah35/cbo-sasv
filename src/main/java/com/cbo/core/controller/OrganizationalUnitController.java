@@ -23,7 +23,7 @@ public class OrganizationalUnitController {
 
     @GetMapping(value = URIS.ORG_UNIT_LIST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
     public ResponseEntity<ResultWrapper<List<OrganizationalUnit>>> getOrganizationalUnits() {
         ResultWrapper<List<OrganizationalUnit>> resultWrapper = organizationService.getOrganizationUnits();
 
@@ -32,7 +32,7 @@ public class OrganizationalUnitController {
 
     @GetMapping(value = URIS.ORG_UNIT_BY_ID, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
     public ResponseEntity<ResultWrapper<OrganizationalUnit>> getOrganizationalUnitById(@PathVariable("orgUnitId") Long orgUnitId) {
         ResultWrapper<OrganizationalUnit> resultWrapper = organizationService.getOrganizationUnitById(orgUnitId);
 

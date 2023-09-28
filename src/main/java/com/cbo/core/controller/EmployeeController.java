@@ -23,7 +23,7 @@ public class EmployeeController {
 
     @GetMapping(value = URIS.EMPLOYEE_LIST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
     public ResponseEntity<ResultWrapper<List<Employee>>> getEmployees() {
         ResultWrapper<List<Employee>> resultWrapper = employeeService.getEmployees();
 
@@ -32,7 +32,7 @@ public class EmployeeController {
 
     @GetMapping(value = URIS.EMPLOYEE_BY_ID, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
     public ResponseEntity<ResultWrapper<Employee>> getEmployeeById(@PathVariable("employeeId") Long employeeId) {
         ResultWrapper<Employee> resultWrapper = employeeService.getEmployeeById(employeeId);
 

@@ -27,7 +27,7 @@ public class ImageController {
 
 
     @GetMapping(value = URIS.AUTHORITY_IMAGES_BY_ID)
-    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
     public ImageRes getImage(@PathVariable("id") Long id) throws IOException {
 
         return imageService.getImages(id);
@@ -37,7 +37,7 @@ public class ImageController {
 
     @PostMapping(value = URIS.UPLOAD_SIGNATURE, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('SASV_ADMIN')")
+    //@PreAuthorize("hasRole('SASV_ADMIN')")
     public ResponseEntity<ResultWrapper<SignatureDTO>> addEmployeeSignature(HttpEntity<SignatureDTO> requestData) throws IOException {
 
 
@@ -47,7 +47,7 @@ public class ImageController {
 
     @PostMapping(value = URIS.UPLOAD_STAMP, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('SASV_ADMIN')")
+    //@PreAuthorize("hasRole('SASV_ADMIN')")
     public ResponseEntity<ResultWrapper<StampDTO>> addStamp(HttpEntity<StampDTO> requestData) throws IOException {
 
         ResultWrapper<StampDTO> resultWrapper= imageService.addStamp(requestData.getBody());
@@ -56,7 +56,7 @@ public class ImageController {
 
     @GetMapping(value = URIS.RETRIEVE_SIGNATURE_LIST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('SASV_ADMIN')")
+    //@PreAuthorize("hasRole('SASV_ADMIN')")
     public ResponseEntity<ResultWrapper<List<SignatureDTO>>> getAllSignatures(){
 
         ResultWrapper<List<SignatureDTO>> resultWrapper= imageService.getAllSignatures();
@@ -65,7 +65,7 @@ public class ImageController {
 
     @GetMapping(value = URIS.RETRIEVE_STAMP_LIST, consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('SASV_ADMIN')")
+    //@PreAuthorize("hasRole('SASV_ADMIN')")
     public ResponseEntity<ResultWrapper<List<StampDTO>>> getAllStamps(){
 
         ResultWrapper<List<StampDTO>> resultWrapper= imageService.getAllStamps();
