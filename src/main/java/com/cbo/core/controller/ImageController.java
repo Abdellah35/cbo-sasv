@@ -33,6 +33,20 @@ public class ImageController {
         return imageService.getImages(id);
     }
 
+    @GetMapping(value = URIS.STAMP_IMAGES_BY_ID)
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    public ImageRes getStampImages(@PathVariable("stampId") Long stampId) throws IOException {
+
+        return imageService.getStampImages(stampId);
+    }
+
+    @GetMapping(value = URIS.SIGNATURE_IMAGES_BY_ID)
+    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    public ImageRes getSignatureImages(@PathVariable("signatureId") Long signatureId) throws IOException {
+
+        return imageService.getSignatureImages(signatureId);
+    }
+
 
     @PostMapping(value = URIS.UPLOAD_SIGNATURE,
             produces = MediaType.APPLICATION_JSON_VALUE)

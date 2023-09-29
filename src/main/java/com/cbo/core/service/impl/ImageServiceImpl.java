@@ -243,6 +243,41 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    public ImageRes getSignatureImages(Long signatureId) throws IOException {
+
+        ImageRes imageRes = new ImageRes();
+        Signature signature = signatureRepository.findById(signatureId).orElse(null);
+        if (signature != null){
+            BufferedImage sigImage = ImageIO.read(new File(signature.getSignatureLink()));
+            ByteArrayOutputStream sibos = new ByteArrayOutputStream();
+            ImageIO.write(sigImage, "png", sibos);
+            byte[] sidata = sibos.toByteArray();
+            imageRes.setSignature(sidata);
+            imageRes.setEmployee(signature.getEmployee());
+        }
+
+        return imageRes;
+    }
+
+    @Override
+    public ImageRes getStampImages(Long stampId) throws IOException {
+        ImageRes imageRes = new ImageRes();
+        Stamp stamp = stampRepository.findById(stampId).orElse(null);
+        if (stamp != null){
+            BufferedImage stampImage = ImageIO.read(new File(stamp.getStampLink()));
+            ByteArrayOutputStream stbos = new ByteArrayOutputStream();
+            ImageIO.write(stampImage, "png", stbos);
+            byte[] stadata = stbos.toByteArray();
+            imageRes.setStamp(stadata);
+            imageRes.setProcess(stamp.getProcess());
+            imageRes.setSubProcess(stamp.getSubProcess());
+            imageRes.setOrganizationalUnit(stamp.getOrganizationalUnit());
+        }
+
+        return imageRes;
+    }
+
+    @Override
     public ResultWrapper<List<StampDTO>> getAllStamps() {
 
         ResultWrapper<List<StampDTO>> resultWrapper = new ResultWrapper<>();

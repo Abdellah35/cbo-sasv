@@ -15,6 +15,9 @@ public class URIS {
 
     public static final String AUTHORITY_IMAGES_BY_ID = AUTHORITY + "images/{id}";
 
+    public static final String SIGNATURE_IMAGES_BY_ID = AUTHORITY + "images/signature/{id}";
+    public static final String STAMP_IMAGES_BY_ID = AUTHORITY + "images/stamp/{id}";
+
 
     public static final String EMPLOYEE_LIST = AUTHORITY + "employees";
     public static final String EMPLOYEE_BY_ID = AUTHORITY + "employees/{employeeId}";
