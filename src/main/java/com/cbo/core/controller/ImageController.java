@@ -54,7 +54,7 @@ public class ImageController {
                                                             @RequestParam(name="subProcessId", required = false) Long subProcessId,
                                                             @RequestParam(name="processId", required = false) Long processId) throws IOException {
         StampDTO stampDTO = new StampDTO();
-        stampDTO.setStamp(stamp);g
+        stampDTO.setStamp(stamp);
         stampDTO.setProcessId(processId);
         stampDTO.setOrganizationUnitId(organizationUnitId);
         stampDTO.setSubProcessId(subProcessId);

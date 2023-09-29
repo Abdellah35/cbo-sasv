@@ -51,6 +51,7 @@ public class ImageServiceImpl implements ImageService {
             FileUploadUtil.saveFile(uploadDir, sigImage.getOriginalFilename(), sigImage);
             signature.setSignatureLink(uploadDir + "/" + sigImage.getOriginalFilename());
             signature.setEmployeeId(signatureDTO.getEmployeeId());
+            signature.setActive(true);
             Signature existingSignature = signatureRepository.findByEmployeeIdAndIsActive(signature.getEmployeeId(), true);
             if (existingSignature != null) {
                 existingSignature.setActive(false);
@@ -101,6 +102,7 @@ public class ImageServiceImpl implements ImageService {
                 FileUploadUtil.saveFile(uploadDir, stampImg.getOriginalFilename(), stampImg);
                 stamp.setStampLink(uploadDir + "/" + stampImg.getOriginalFilename());
                 stamp.setProcessId(stampDTO.getProcessId());
+                stamp.setActive(true);
                 Stamp existingProcStamp = stampRepository.findByProcessIdAndIsActive(stampDTO.getProcessId(), true);
                 if (existingProcStamp != null) {
                     existingProcStamp.setActive(false);
