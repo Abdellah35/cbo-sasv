@@ -49,12 +49,12 @@ public class ImageController {
     @PostMapping(value = URIS.UPLOAD_STAMP,
             produces = MediaType.APPLICATION_JSON_VALUE)
     //@PreAuthorize("hasRole('SASV_ADMIN')")
-    public ResponseEntity<ResultWrapper<StampDTO>> addStamp(@RequestParam("stamp") MultipartFile stamp,
-                                                            @RequestParam("organizationUnitId") Long organizationUnitId,
-                                                            @RequestParam("subProcessId") Long subProcessId,
-                                                            @RequestParam("processId") Long processId) throws IOException {
+    public ResponseEntity<ResultWrapper<StampDTO>> addStamp(@RequestParam(name="stamp") MultipartFile stamp,
+                                                            @RequestParam(name="organizationUnitId", required = false) Long organizationUnitId,
+                                                            @RequestParam(name="subProcessId", required = false) Long subProcessId,
+                                                            @RequestParam(name="processId", required = false) Long processId) throws IOException {
         StampDTO stampDTO = new StampDTO();
-        stampDTO.setStamp(stamp);
+        stampDTO.setStamp(stamp);g
         stampDTO.setProcessId(processId);
         stampDTO.setOrganizationUnitId(organizationUnitId);
         stampDTO.setSubProcessId(subProcessId);
