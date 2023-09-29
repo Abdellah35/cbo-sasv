@@ -235,7 +235,7 @@ public class ImageServiceImpl implements ImageService {
     public ResultWrapper<List<StampDTO>> getAllStamps() {
 
         ResultWrapper<List<StampDTO>> resultWrapper = new ResultWrapper<>();
-        resultWrapper.setResult(StampMapper.INSTANCE.stampsToStampDTOs(stampRepository.findAll()));
+        resultWrapper.setResult(StampMapper.INSTANCE.stampsToStampDTOs(stampRepository.findAllActiveStamps(true)));
         resultWrapper.setStatus(true);
         return resultWrapper;
     }
@@ -243,7 +243,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ResultWrapper<List<SignatureDTO>> getAllSignatures() {
         ResultWrapper<List<SignatureDTO>> resultWrapper = new ResultWrapper<>();
-        resultWrapper.setResult(SignatureMapper.INSTANCE.signatureToSignatureDTOs(signatureRepository.findAll()));
+        resultWrapper.setResult(SignatureMapper.INSTANCE.signatureToSignatureDTOs(signatureRepository.findAllActiveStamps(true)));
         resultWrapper.setStatus(true);
         return resultWrapper;
     }
