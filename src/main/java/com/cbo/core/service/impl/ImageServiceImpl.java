@@ -210,6 +210,7 @@ public class ImageServiceImpl implements ImageService {
             ByteArrayOutputStream stbos = new ByteArrayOutputStream();
             ImageIO.write(stampImage, "png", stbos);
             byte[] stadata = stbos.toByteArray();
+            imgRes.setStamp(stadata);
             imgRes.setOrganizationalUnit(autho.getOrganizationalUnit());
         } else if (autho.getSubProcess() != null) {
             Stamp stamp = stampRepository.findBySubProcessIdAndIsActive(autho.getSubProcess().getId(), true);

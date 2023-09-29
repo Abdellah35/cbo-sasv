@@ -56,7 +56,7 @@ public class AuthorityServiceImpl implements AuthorityService {
             resultWrapper.setStatus(false);
             resultWrapper.setMessage("No such employee exists!");
             return resultWrapper;
-        } else if (authorityDTO.getOrganizationalUnit().getId() != null) {
+        } else if (authorityDTO.getOrganizationalUnit() != null) {
             long orgId = authorityDTO.getOrganizationalUnit().getId();
             if (isOrgUnitFree(orgId) && doesOrgUNitHaveStamp(orgId)) {
                 authority.setOrganizationalUnit(organizationService.findOrganizationUnitById(orgId));
@@ -65,7 +65,7 @@ public class AuthorityServiceImpl implements AuthorityService {
                 resultWrapper.setMessage("OrgUnit doesn't have stamp image or have active authority pair");
                 return resultWrapper;
             }
-        } else if (authorityDTO.getSubProcess().getId() != null) {
+        } else if (authorityDTO.getSubProcess() != null) {
             long subProcId = authorityDTO.getSubProcess().getId();
             if (isSubProcessFree(subProcId) && doesSubProcessHaveStamp(subProcId)) {
                 authority.setSubProcess(subProcessService.findSubProcess(subProcId));
@@ -74,7 +74,7 @@ public class AuthorityServiceImpl implements AuthorityService {
                 resultWrapper.setMessage("SubProcess doesn't have stamp image or have active authority pair");
                 return resultWrapper;
             }
-        } else if (authorityDTO.getProcess().getId() != null) {
+        } else if (authorityDTO.getProcess() != null) {
             long procId = authorityDTO.getProcess().getId();
             if (isProcessFree(procId) && doesProcessHaveStamp(procId)) {
                 authority.setProcess(processService.findProcess(procId));
@@ -112,7 +112,6 @@ public class AuthorityServiceImpl implements AuthorityService {
         resultWrapper.setResult(authorityDTOS);
         return resultWrapper;
     }
-
 
     @Override
     public ResultWrapper<AuthorityDTO> updateAuthority(AuthorityDTO authorityDTO) {
@@ -182,7 +181,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     private boolean doesEmployeeHaveSignature(Long employeeId) {
         Signature signature = signatureRepository.findByEmployeeAndIsActive(employeeId, true);
-        return signature == null;
+        return signature != null;
     }
 
     private boolean isProcessFree(Long employeeId) {
@@ -192,7 +191,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     private boolean doesProcessHaveStamp(Long employeeId) {
         Stamp stamp = stampRepository.findByProcessIdAndIsActive(employeeId, true);
-        return stamp == null;
+        return stamp != null;
     }
 
     private boolean isSubProcessFree(Long employeeId) {
@@ -202,7 +201,7 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     private boolean doesSubProcessHaveStamp(Long employeeId) {
         Stamp stamp = stampRepository.findBySubProcessIdAndIsActive(employeeId, true);
-        return stamp == null;
+        return stamp != null;
     }
 
     private boolean isOrgUnitFree(Long employeeId) {
@@ -212,6 +211,6 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     private boolean doesOrgUNitHaveStamp(Long employeeId) {
         Stamp stamp = stampRepository.findByOrganizationUnitIdIdAndIsActive(employeeId, true);
-        return stamp == null;
+        return stamp != null;
     }
 }
