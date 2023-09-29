@@ -12,11 +12,17 @@ public class Stamp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long processId;
+    @ManyToOne
+    @JoinColumn(name = "PROCESS_ID")
+    private Process process;
 
-    private Long subProcessId;
+    @ManyToOne
+    @JoinColumn(name = "SUB_PROCESS_ID")
+    private SubProcess subProcess;
 
-    private Long organizationUnitId;
+    @ManyToOne
+    @JoinColumn(name = "ORGANIZATION_UNIT_ID")
+    private OrganizationalUnit organizationalUnit;
 
     private String stampLink;
 

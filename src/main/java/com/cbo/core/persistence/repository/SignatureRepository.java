@@ -10,7 +10,9 @@ import java.util.List;
 
 public interface SignatureRepository extends JpaRepository<Signature, Long> {
 
-    Signature findByEmployeeIdAndIsActive(Long employeeId, boolean isActive);
+    @Query(" SELECT SG FROM Signature SG WHERE SG.employee.id = :employeeId" +
+            " AND SG.isActive = :isActive")
+    Signature findByEmployeeAndIsActive(@Param("employeeId") Long employeeId,@Param("isActive") boolean isActive);
 
 
     @Query("SELECT SG FROM Signature SG WHERE" +

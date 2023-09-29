@@ -68,7 +68,7 @@ public class AuthorityServiceImpl implements AuthorityService {
         } else if (authorityDTO.getSubProcess().getId() != null) {
             long subProcId = authorityDTO.getSubProcess().getId();
             if (isSubProcessFree(subProcId) && doesSubProcessHaveStamp(subProcId)) {
-                authority.setSubProcess(subProcessService.findProcess(subProcId));
+                authority.setSubProcess(subProcessService.findSubProcess(subProcId));
             } else {
                 resultWrapper.setStatus(false);
                 resultWrapper.setMessage("SubProcess doesn't have stamp image or have active authority pair");
@@ -181,7 +181,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     private boolean doesEmployeeHaveSignature(Long employeeId) {
-        Signature signature = signatureRepository.findByEmployeeIdAndIsActive(employeeId, true);
+        Signature signature = signatureRepository.findByEmployeeAndIsActive(employeeId, true);
         return signature == null;
     }
 

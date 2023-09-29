@@ -53,7 +53,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     public Employee findEmployeeById(Long id) {
-        return employeeRepository.findById(id).orElseThrow(() -> new NoSuchUserExistsException("NO Employee PRESENT WITH ID = " + id));
+        return employeeRepository.findById(id).orElse(null);
     }
 
 

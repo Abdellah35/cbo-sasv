@@ -1,5 +1,8 @@
 package com.cbo.core.dto;
 
+import com.cbo.core.persistence.model.OrganizationalUnit;
+import com.cbo.core.persistence.model.Process;
+import com.cbo.core.persistence.model.SubProcess;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.Getter;
@@ -13,5 +16,11 @@ public class StampDTO extends BaseDTO{
     private Long organizationUnitId;
     private Long subProcessId;
     private Long processId;
+
+    //
+    private OrganizationalUnit organizationalUnit;
+    private SubProcess subProcess;
+    private Process process;
+
     private MultipartFile stamp;
 }

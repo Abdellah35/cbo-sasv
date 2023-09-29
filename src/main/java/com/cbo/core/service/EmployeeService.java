@@ -10,4 +10,6 @@ public interface EmployeeService {
     ResultWrapper<List<Employee>> getEmployees();
 
     ResultWrapper<Employee> getEmployeeById(Long id);
+
+    Employee findEmployeeById(Long id);
 }

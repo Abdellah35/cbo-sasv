@@ -12,6 +12,6 @@ public interface SubProcessService {
 
     ResultWrapper<SubProcess> findSubProcessById(Long subProcessId);
 
-    SubProcess findProcess(Long id);
+    SubProcess findSubProcess(Long id);
 
 }

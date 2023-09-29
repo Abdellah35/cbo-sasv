@@ -40,7 +40,7 @@ public class SubProcessServiceImpl implements SubProcessService {
     }
 
     @Override
-    public SubProcess findProcess(Long id) {
+    public SubProcess findSubProcess(Long id) {
         return subProcessRepository.findById(id).orElse(null);
     }
 }

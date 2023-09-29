@@ -11,8 +11,7 @@ import com.cbo.core.persistence.model.Stamp;
 import com.cbo.core.persistence.repository.SignatureRepository;
 import com.cbo.core.persistence.repository.StampRepository;
 import com.cbo.core.response.ImageRes;
-import com.cbo.core.service.AuthorityService;
-import com.cbo.core.service.ImageService;
+import com.cbo.core.service.*;
 import com.cbo.core.utility.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +37,16 @@ public class ImageServiceImpl implements ImageService {
 
     @Autowired
     private AuthorityService authorityService;
+    @Autowired
+    private OrganizationService organizationService;
+    @Autowired
+    private ProcessService processService;
+
+    @Autowired
+    private SubProcessService subProcessService;
+
+    @Autowired
+    private EmployeeService employeeService;
 
     @Override
     public ResultWrapper<SignatureDTO> addEmployeeSignature(SignatureDTO signatureDTO) throws IOException {
@@ -50,9 +59,9 @@ public class ImageServiceImpl implements ImageService {
             String uploadDir = "auth-images/signatures/" + signatureDTO.getEmployeeId();
             FileUploadUtil.saveFile(uploadDir, sigImage.getOriginalFilename(), sigImage);
             signature.setSignatureLink(uploadDir + "/" + sigImage.getOriginalFilename());
-            signature.setEmployeeId(signatureDTO.getEmployeeId());
+            signature.setEmployee(employeeService.findEmployeeById(signatureDTO.getEmployeeId()));
             signature.setActive(true);
-            Signature existingSignature = signatureRepository.findByEmployeeIdAndIsActive(signature.getEmployeeId(), true);
+            Signature existingSignature = signatureRepository.findByEmployeeAndIsActive(signatureDTO.getEmployeeId(), true);
             if (existingSignature != null) {
                 existingSignature.setActive(false);
                 signatureRepository.save(existingSignature);
@@ -81,7 +90,8 @@ public class ImageServiceImpl implements ImageService {
                 String uploadDir = "auth-images/stamp/orgUnit" + stampDTO.getOrganizationUnitId();
                 FileUploadUtil.saveFile(uploadDir, stampImg.getOriginalFilename(), stampImg);
                 stamp.setStampLink(uploadDir + "/" + stampImg.getOriginalFilename());
-                stamp.setOrganizationUnitId(stampDTO.getOrganizationUnitId());
+
+                stamp.setOrganizationalUnit(organizationService.findOrganizationUnitById(stampDTO.getOrganizationUnitId()));
                 Stamp existingOrgStamp = stampRepository.findByOrganizationUnitIdIdAndIsActive(stampDTO.getOrganizationUnitId(), true);
                 if (existingOrgStamp != null) {
                     existingOrgStamp.setActive(false);
@@ -91,7 +101,7 @@ public class ImageServiceImpl implements ImageService {
                 String uploadDir = "auth-images/stamp/subProcess" + stampDTO.getSubProcessId();
                 FileUploadUtil.saveFile(uploadDir, stampImg.getOriginalFilename(), stampImg);
                 stamp.setStampLink(uploadDir + "/" + stampImg.getOriginalFilename());
-                stamp.setSubProcessId(stampDTO.getSubProcessId());
+                stamp.setSubProcess(subProcessService.findSubProcess(stampDTO.getSubProcessId()));
                 Stamp existingSubStamp = stampRepository.findBySubProcessIdAndIsActive(stampDTO.getSubProcessId(), true);
                 if (existingSubStamp != null) {
                     existingSubStamp.setActive(false);
@@ -101,8 +111,7 @@ public class ImageServiceImpl implements ImageService {
                 String uploadDir = "auth-images/stamp/process" + stampDTO.getProcessId();
                 FileUploadUtil.saveFile(uploadDir, stampImg.getOriginalFilename(), stampImg);
                 stamp.setStampLink(uploadDir + "/" + stampImg.getOriginalFilename());
-                stamp.setProcessId(stampDTO.getProcessId());
-                stamp.setActive(true);
+                stamp.setProcess(processService.findProcess(stampDTO.getProcessId()));
                 Stamp existingProcStamp = stampRepository.findByProcessIdAndIsActive(stampDTO.getProcessId(), true);
                 if (existingProcStamp != null) {
                     existingProcStamp.setActive(false);
@@ -113,7 +122,7 @@ public class ImageServiceImpl implements ImageService {
                 resultWrapper.setMessage("process or subProcess or unit id must be provided");
                 return resultWrapper;
             }
-
+            stamp.setActive(true);
             stampRepository.save(stamp);
             resultWrapper.setStatus(true);
             resultWrapper.setMessage("stamp image added successfully");
@@ -129,7 +138,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ResultWrapper<SignatureDTO> getEmployeeSignature(Long employeeId) {
         ResultWrapper<SignatureDTO> resultWrapper = new ResultWrapper<>();
-        Signature signature = signatureRepository.findByEmployeeIdAndIsActive(employeeId, true);
+        Signature signature = signatureRepository.findByEmployeeAndIsActive(employeeId, true);
         if (signature != null) {
             resultWrapper.setResult(SignatureMapper.INSTANCE.toDTO(signature));
             resultWrapper.setStatus(true);
@@ -222,7 +231,7 @@ public class ImageServiceImpl implements ImageService {
             return null;
         }
 
-        Signature signature = signatureRepository.findByEmployeeIdAndIsActive(autho.getEmployee().getId(), true);
+        Signature signature = signatureRepository.findByEmployeeAndIsActive(autho.getEmployee().getId(), true);
         BufferedImage sigImage = ImageIO.read(new File(signature.getSignatureLink()));
         ByteArrayOutputStream sibos = new ByteArrayOutputStream();
         ImageIO.write(sigImage, "png", sibos);
