@@ -1,9 +1,7 @@
 package com.cbo.core.response;
 
-import com.cbo.core.persistence.model.Employee;
-import com.cbo.core.persistence.model.OrganizationalUnit;
+import com.cbo.core.persistence.model.*;
 import com.cbo.core.persistence.model.Process;
-import com.cbo.core.persistence.model.SubProcess;
 import lombok.*;
 
 @Getter
@@ -21,6 +19,8 @@ public class ImageRes {
     private OrganizationalUnit organizationalUnit;
     private SubProcess subProcess;
     private Process process;
+    private Branch branch;
+    private District district;
     private boolean isActive;
 
 }

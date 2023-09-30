@@ -47,6 +47,14 @@ public class Authority implements Serializable {
     @JoinColumn(name = "PROCESS_ID")
     private Process process;
 
+    @ManyToOne
+    @JoinColumn(name = "DISTRICT_ID")
+    private District district;
+
+    @ManyToOne
+    @JoinColumn(name = "BRANCH_ID")
+    private Branch branch;
+
     @Column(name = "STATUS")
     private String status;
 

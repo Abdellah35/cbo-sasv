@@ -4,15 +4,9 @@ import com.cbo.core.dto.AuthorityDTO;
 import com.cbo.core.dto.ResultWrapper;
 import com.cbo.core.enums.AuthorityStatus;
 import com.cbo.core.mappers.AuthorityMapper;
-import com.cbo.core.persistence.model.Authority;
-import com.cbo.core.persistence.model.Employee;
-import com.cbo.core.persistence.model.Signature;
-import com.cbo.core.persistence.model.Stamp;
+import com.cbo.core.persistence.model.*;
 import com.cbo.core.persistence.repository.*;
-import com.cbo.core.service.AuthorityService;
-import com.cbo.core.service.OrganizationService;
-import com.cbo.core.service.ProcessService;
-import com.cbo.core.service.SubProcessService;
+import com.cbo.core.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +34,10 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Autowired
     private SubProcessService subProcessService;
     @Autowired
+    private BranchService branchService;
+    @Autowired
+    private DistrictService districtService;
+    @Autowired
     private OrganizationalUnitRepository organizationalUnitRepository;
 
 
@@ -62,7 +60,7 @@ public class AuthorityServiceImpl implements AuthorityService {
                 authority.setOrganizationalUnit(organizationService.findOrganizationUnitById(orgId));
             } else {
                 resultWrapper.setStatus(false);
-                resultWrapper.setMessage("OrgUnit doesn't have stamp image or have active authority pair");
+                resultWrapper.setMessage("Selected OrgUnit doesn't have stamp image or have active authority pair");
                 return resultWrapper;
             }
         } else if (authorityDTO.getSubProcess() != null) {
@@ -71,7 +69,7 @@ public class AuthorityServiceImpl implements AuthorityService {
                 authority.setSubProcess(subProcessService.findSubProcess(subProcId));
             } else {
                 resultWrapper.setStatus(false);
-                resultWrapper.setMessage("SubProcess doesn't have stamp image or have active authority pair");
+                resultWrapper.setMessage("Selected SubProcess doesn't have stamp image or have active authority pair");
                 return resultWrapper;
             }
         } else if (authorityDTO.getProcess() != null) {
@@ -80,7 +78,25 @@ public class AuthorityServiceImpl implements AuthorityService {
                 authority.setProcess(processService.findProcess(procId));
             } else {
                 resultWrapper.setStatus(false);
-                resultWrapper.setMessage("Process doesn't have stamp image or have active authority pair");
+                resultWrapper.setMessage("Selected Process doesn't have stamp image or have active authority pair");
+                return resultWrapper;
+            }
+        }else if (authorityDTO.getBranch() != null) {
+            long branchId = authorityDTO.getBranch().getId();
+            if (isBranchFree(branchId) && doesBranchHaveStamp(branchId)) {
+                authority.setBranch(branchService.findBranch(branchId));
+            } else {
+                resultWrapper.setStatus(false);
+                resultWrapper.setMessage("Selected Branch doesn't have stamp image or have active authority pair");
+                return resultWrapper;
+            }
+        }else if (authorityDTO.getDistrict() != null) {
+            long districtId = authorityDTO.getDistrict().getId();
+            if (isDistrictFree(districtId) && doesDistrictHaveStamp(districtId)) {
+                authority.setDistrict(districtService.findDistrict(districtId));
+            } else {
+                resultWrapper.setStatus(false);
+                resultWrapper.setMessage("Selected District doesn't have stamp image or have active authority pair");
                 return resultWrapper;
             }
         } else {
@@ -191,6 +207,26 @@ public class AuthorityServiceImpl implements AuthorityService {
 
     private boolean doesProcessHaveStamp(Long employeeId) {
         Stamp stamp = stampRepository.findByProcessIdAndIsActive(employeeId, true);
+        return stamp != null;
+    }
+
+    private boolean isBranchFree(Long branchId) {
+        Authority authority = authorityRepo.findAuthorityByBranchAndState(branchId, AuthorityStatus.Active.name());
+        return authority == null;
+    }
+
+    private boolean doesBranchHaveStamp(Long branchId) {
+        Stamp stamp = stampRepository.findByBranchIdAndIsActive(branchId, true);
+        return stamp != null;
+    }
+
+    private boolean isDistrictFree(Long districtId) {
+        Authority authority = authorityRepo.findAuthorityByDistrictAndState(districtId, AuthorityStatus.Active.name());
+        return authority == null;
+    }
+
+    private boolean doesDistrictHaveStamp(Long districtId) {
+        Stamp stamp = stampRepository.findByDistrictIdAndIsActive(districtId, true);
         return stamp != null;
     }
 

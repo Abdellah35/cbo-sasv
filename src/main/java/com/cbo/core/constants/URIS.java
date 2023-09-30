@@ -29,6 +29,12 @@ public class URIS {
     public static final String PROCESS_LIST = AUTHORITY + "processes";
     public static final String PROCESS_BY_ID = AUTHORITY + "processes/{processId}";
 
+    public static final String BRANCH_LIST = AUTHORITY + "branches";
+    public static final String BRANCH_BY_ID = AUTHORITY + "branches/{branchId}";
+
+    public static final String DISTRICT_LIST = AUTHORITY + "districts";
+    public static final String DISTRICT_BY_ID = AUTHORITY + "districts/{districtId}";
+
     public static final String UPLOAD_SIGNATURE = AUTHORITY + "signature";
 
     public static final String UPLOAD_STAMP = AUTHORITY + "stamp";

@@ -24,6 +24,14 @@ public class Stamp {
     @JoinColumn(name = "ORGANIZATION_UNIT_ID")
     private OrganizationalUnit organizationalUnit;
 
+    @ManyToOne
+    @JoinColumn(name = "DISTRICT_ID")
+    private District district;
+
+    @ManyToOne
+    @JoinColumn(name = "BRANCH_ID")
+    private Branch branch;
+
     private String stampLink;
 
     private boolean isActive;

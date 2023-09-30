@@ -43,6 +43,12 @@ public class ImageServiceImpl implements ImageService {
     private ProcessService processService;
 
     @Autowired
+    private DistrictService districtService;
+
+    @Autowired
+    private BranchService branchService;
+
+    @Autowired
     private SubProcessService subProcessService;
 
     @Autowired
@@ -117,7 +123,27 @@ public class ImageServiceImpl implements ImageService {
                     existingProcStamp.setActive(false);
                     stampRepository.save(existingProcStamp);
                 }
-            } else {
+            }else if (stampDTO.getBranchId() != null) {
+                String uploadDir = "auth-images/stamp/branch" + stampDTO.getBranchId();
+                FileUploadUtil.saveFile(uploadDir, stampImg.getOriginalFilename(), stampImg);
+                stamp.setStampLink(uploadDir + "/" + stampImg.getOriginalFilename());
+                stamp.setBranch(branchService.findBranch(stampDTO.getBranchId()));
+                Stamp existingProcStamp = stampRepository.findByBranchIdAndIsActive(stampDTO.getBranchId(), true);
+                if (existingProcStamp != null) {
+                    existingProcStamp.setActive(false);
+                    stampRepository.save(existingProcStamp);
+                }
+            } else if (stampDTO.getDistrictId() != null) {
+                String uploadDir = "auth-images/stamp/district" + stampDTO.getDistrictId();
+                FileUploadUtil.saveFile(uploadDir, stampImg.getOriginalFilename(), stampImg);
+                stamp.setStampLink(uploadDir + "/" + stampImg.getOriginalFilename());
+                stamp.setDistrict(districtService.findDistrict(stampDTO.getDistrictId()));
+                Stamp existingProcStamp = stampRepository.findByDistrictIdAndIsActive(stampDTO.getDistrictId(), true);
+                if (existingProcStamp != null) {
+                    existingProcStamp.setActive(false);
+                    stampRepository.save(existingProcStamp);
+                }
+            }  else {
                 resultWrapper.setStatus(false);
                 resultWrapper.setMessage("process or subProcess or unit id must be provided");
                 return resultWrapper;
@@ -202,7 +228,6 @@ public class ImageServiceImpl implements ImageService {
             return null;
         }
 
-
         ImageRes imgRes = new ImageRes();
         if (autho.getOrganizationalUnit() != null) {
             Stamp stamp = stampRepository.findByOrganizationUnitIdIdAndIsActive(autho.getOrganizationalUnit().getId(), true);
@@ -228,6 +253,22 @@ public class ImageServiceImpl implements ImageService {
             byte[] stadata = stbos.toByteArray();
             imgRes.setStamp(stadata);
             imgRes.setProcess(autho.getProcess());
+        }else if (autho.getBranch() != null) {
+            Stamp stamp = stampRepository.findByBranchIdAndIsActive(autho.getBranch().getId(), true);
+            BufferedImage stampImage = ImageIO.read(new File(stamp.getStampLink()));
+            ByteArrayOutputStream stbos = new ByteArrayOutputStream();
+            ImageIO.write(stampImage, "png", stbos);
+            byte[] stadata = stbos.toByteArray();
+            imgRes.setStamp(stadata);
+            imgRes.setBranch(autho.getBranch());
+        }else if (autho.getDistrict() != null) {
+            Stamp stamp = stampRepository.findByDistrictIdAndIsActive(autho.getDistrict().getId(), true);
+            BufferedImage stampImage = ImageIO.read(new File(stamp.getStampLink()));
+            ByteArrayOutputStream stbos = new ByteArrayOutputStream();
+            ImageIO.write(stampImage, "png", stbos);
+            byte[] stadata = stbos.toByteArray();
+            imgRes.setStamp(stadata);
+            imgRes.setDistrict(autho.getDistrict());
         } else {
             return null;
         }

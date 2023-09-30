@@ -21,6 +21,15 @@ public interface StampRepository extends JpaRepository<Stamp, Long> {
             "AND ST.isActive = :isActive")
     Stamp findByOrganizationUnitIdIdAndIsActive(@Param("organizationUnitId") Long organizationUnitId,@Param("isActive") boolean isActive);
 
+    @Query("SELECT ST FROM Stamp ST WHERE ST.branch.id = :branchId " +
+            "AND ST.isActive = :isActive")
+    Stamp findByBranchIdAndIsActive(@Param("branchId") Long processId,@Param("isActive") boolean isActive);
+
+
+    @Query("SELECT ST FROM Stamp ST WHERE ST.district.id = :districtId " +
+            "AND ST.isActive = :isActive")
+    Stamp findByDistrictIdAndIsActive(@Param("districtId") Long processId,@Param("isActive") boolean isActive);
+
 
     @Query("SELECT ST FROM Stamp ST WHERE" +
             " ST.isActive = :isActive")

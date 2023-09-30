@@ -24,6 +24,16 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long> {
             " AND AT.status = :status")
     Authority findAuthorityByProcessAndState(@Param("processId") Long processId, @Param("status") String status);
 
+
+    @Query(" SELECT AT FROM Authority AT JOIN FETCH AT.branch WHERE AT.branch.id = :branchId" +
+            " AND AT.status = :status")
+    Authority findAuthorityByBranchAndState(@Param("branchId") Long branchId, @Param("status") String status);
+
+
+    @Query(" SELECT AT FROM Authority AT JOIN FETCH AT.district WHERE AT.district.id = :districtId" +
+            " AND AT.status = :status")
+    Authority findAuthorityByDistrictAndState(@Param("districtId") Long districtId, @Param("status") String status);
+
     @Query(" SELECT AT FROM Authority AT JOIN FETCH AT.employee WHERE AT.employee.id = :employeeId" +
             " AND AT.status = :status")
     Authority findAuthorityByEmployeeAndState(@Param("employeeId") Long employeeId, @Param("status") String status);

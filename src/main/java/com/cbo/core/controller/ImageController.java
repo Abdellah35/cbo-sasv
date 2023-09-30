@@ -66,12 +66,16 @@ public class ImageController {
     public ResponseEntity<ResultWrapper<StampDTO>> addStamp(@RequestParam(name="stamp") MultipartFile stamp,
                                                             @RequestParam(name="organizationUnitId", required = false) Long organizationUnitId,
                                                             @RequestParam(name="subProcessId", required = false) Long subProcessId,
-                                                            @RequestParam(name="processId", required = false) Long processId) throws IOException {
+                                                            @RequestParam(name="processId", required = false) Long processId,
+                                                            @RequestParam(name="branchId", required = false) Long branchId,
+                                                            @RequestParam(name="districtId", required = false) Long districtId) throws IOException {
         StampDTO stampDTO = new StampDTO();
         stampDTO.setStamp(stamp);
         stampDTO.setProcessId(processId);
         stampDTO.setOrganizationUnitId(organizationUnitId);
         stampDTO.setSubProcessId(subProcessId);
+        stampDTO.setBranchId(branchId);
+        stampDTO.setDistrictId(districtId);
         ResultWrapper<StampDTO> resultWrapper= imageService.addStamp(stampDTO);
         return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
     }
