@@ -314,6 +314,8 @@ public class ImageServiceImpl implements ImageService {
             imageRes.setProcess(stamp.getProcess());
             imageRes.setSubProcess(stamp.getSubProcess());
             imageRes.setOrganizationalUnit(stamp.getOrganizationalUnit());
+            imageRes.setDistrict(stamp.getDistrict());
+            imageRes.setBranch(stamp.getBranch());
         }
 
         return imageRes;
