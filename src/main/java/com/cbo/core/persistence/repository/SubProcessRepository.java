@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface SubProcessRepository extends JpaRepository<SubProcess, Long> {
 
-    @Query(" SELECT SP FROM SubProcess SP WHERE SP.process.id = :processId ")
-    List<SubProcess> findByProcessId(@Param("processId") Long processId);
+//    @Query(" SELECT SP FROM SubProcess SP WHERE SP.process.id = :processId ")
+//    List<SubProcess> findByProcessId(@Param("processId") Long processId);
 }

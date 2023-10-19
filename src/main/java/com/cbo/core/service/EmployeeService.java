@@ -9,6 +9,12 @@ public interface EmployeeService {
 
     ResultWrapper<List<Employee>> getEmployees();
 
+    ResultWrapper<List<Employee>> getEmployeesByProcessId(Long processId);
+
+    ResultWrapper<List<Employee>> getEmployeesByName(String namePattern);
+
+    ResultWrapper<List<Employee>> getEmployeesBySubProcessId(Long subProcessId);
+
     ResultWrapper<Employee> getEmployeeById(Long id);
 
     Employee findEmployeeById(Long id);

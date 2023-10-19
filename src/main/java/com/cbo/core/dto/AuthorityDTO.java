@@ -11,7 +11,7 @@ public class AuthorityDTO extends BaseDTO {
 
     private Employee employee;
 
-    private OrganizationalUnit organizationalUnit;
+    private Team team;
 
     private SubProcess subProcess;
 

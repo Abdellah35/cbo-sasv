@@ -14,11 +14,15 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "processes")
-public class Process implements Serializable {
+@Table(name = "jobs")
+public class Job implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long sapId;
     private String name;
-    private String code;
+    private String title;
+    private String level;
+
+
 }

@@ -12,9 +12,9 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long> {
 //            + " JOIN FETCH CDS.committee WHERE CDS.committee.id = :id "
 //            + " AND CDS.status = :status")
 
-    @Query(" SELECT AT FROM Authority AT JOIN FETCH AT.organizationalUnit WHERE AT.organizationalUnit.id = :organizationalUnitId" +
+    @Query(" SELECT AT FROM Authority AT JOIN FETCH AT.team WHERE AT.team.id = :teamId" +
             " AND AT.status = :status")
-    Authority findAuthorityByOrganizationalUnitAndState(@Param("organizationalUnitId") Long organizationalUnitId, @Param("status") String status);
+    Authority findAuthorityByTeamAndState(@Param("teamId") Long teamId, @Param("status") String status);
 
     @Query(" SELECT AT FROM Authority AT JOIN FETCH AT.subProcess WHERE AT.subProcess.id = :subProcessId" +
             " AND AT.status = :status")

@@ -1,11 +1,16 @@
 package com.cbo.core.persistence.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Data
 @AllArgsConstructor
@@ -14,45 +19,36 @@ import javax.persistence.*;
 @Table(name = "employees")
 public class Employee {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY,
-            generator = "employee_sequence")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long employeeId;
-    private String fullName;
-    private String jobTitle;
-    @ManyToOne
-    private OrganizationalUnit organizationalUnit;
-    private String phoneNumber;
-    private String personalEmail;
-    private String companyEmail;
+    private String employeeSapUserName;
+    private String employeeFullName;
+    private Long supervisorId;
+    private String supervisorFullName;
+    private Long hrManagerId;
+    private String hrManagerFullName;
+    private String companyEntryDate;
+    private String latestPositionEntryDate;
     private String gender;
-    private String birthDate;
-    private String employeeImage;
-    private String signatureImage;
-    private Boolean active;
-    @OneToOne(mappedBy = "employee")
-    @JsonIgnore
-    private User user;
-
-    public Employee(Long employeeId, String fullName, String jobTitle, OrganizationalUnit organizationalUnit, String personalEmail, String companyEmail, String phoneNumber, String employeeImage, String signatureImage, String gender, String birthDate, Boolean active) {
-        this.employeeId = employeeId;
-        this.fullName = fullName;
-        this.jobTitle = jobTitle;
-        this.organizationalUnit = organizationalUnit;
-        this.personalEmail = personalEmail;
-        this.companyEmail = companyEmail;
-        this.phoneNumber = phoneNumber;
-        this.employeeImage = employeeImage;
-        this.signatureImage = signatureImage;
-        this.gender = gender;
-        this.birthDate = birthDate;
-        this.active = active;
-    }
-
-    @Transient
-    public String getSignImagePath() {
-        if (signatureImage == null || id == null) return null;
-        return "/user-photos/employee/" + id + "/" + signatureImage;
-    }
+    private String salutation;
+    @ManyToOne
+    @JoinColumn(name="job_id")
+    private Job job;
+    @ManyToOne
+    @JoinColumn(name="branch_id")
+    private Branch branch;
+    @ManyToOne
+    @JoinColumn(name="position_id")
+    private Position position;
+    @ManyToOne
+    @JoinColumn(name="team_id")
+    private Team team;
+    @ManyToOne
+    @JoinColumn(name="sub_process_id")
+    private SubProcess subProcess;
+    @ManyToOne
+    @JoinColumn(name="process_id")
+    private Process process;
 }
 

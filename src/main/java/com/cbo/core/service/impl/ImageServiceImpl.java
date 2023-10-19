@@ -38,7 +38,7 @@ public class ImageServiceImpl implements ImageService {
     @Autowired
     private AuthorityService authorityService;
     @Autowired
-    private OrganizationService organizationService;
+    private TeamService teamService;
     @Autowired
     private ProcessService processService;
 
@@ -92,13 +92,13 @@ public class ImageServiceImpl implements ImageService {
         Stamp stamp = new Stamp();
         MultipartFile stampImg = stampDTO.getStamp();
         if (stampImg != null) {
-            if (stampDTO.getOrganizationUnitId() != null) {
-                String uploadDir = "auth-images/stamp/orgUnit" + stampDTO.getOrganizationUnitId();
+            if (stampDTO.getTeamId() != null) {
+                String uploadDir = "auth-images/stamp/team" + stampDTO.getTeamId();
                 FileUploadUtil.saveFile(uploadDir, stampImg.getOriginalFilename(), stampImg);
                 stamp.setStampLink(uploadDir + "/" + stampImg.getOriginalFilename());
 
-                stamp.setOrganizationalUnit(organizationService.findOrganizationUnitById(stampDTO.getOrganizationUnitId()));
-                Stamp existingOrgStamp = stampRepository.findByOrganizationUnitIdIdAndIsActive(stampDTO.getOrganizationUnitId(), true);
+                stamp.setTeam(teamService.findTeam(stampDTO.getTeamId()));
+                Stamp existingOrgStamp = stampRepository.findByOrganizationUnitIdIdAndIsActive(stampDTO.getTeamId(), true);
                 if (existingOrgStamp != null) {
                     existingOrgStamp.setActive(false);
                     stampRepository.save(existingOrgStamp);
@@ -229,14 +229,14 @@ public class ImageServiceImpl implements ImageService {
         }
 
         ImageRes imgRes = new ImageRes();
-        if (autho.getOrganizationalUnit() != null) {
-            Stamp stamp = stampRepository.findByOrganizationUnitIdIdAndIsActive(autho.getOrganizationalUnit().getId(), true);
+        if (autho.getTeam() != null) {
+            Stamp stamp = stampRepository.findByOrganizationUnitIdIdAndIsActive(autho.getTeam().getId(), true);
             BufferedImage stampImage = ImageIO.read(new File(stamp.getStampLink()));
             ByteArrayOutputStream stbos = new ByteArrayOutputStream();
             ImageIO.write(stampImage, "png", stbos);
             byte[] stadata = stbos.toByteArray();
             imgRes.setStamp(stadata);
-            imgRes.setOrganizationalUnit(autho.getOrganizationalUnit());
+            imgRes.setTeam(autho.getTeam());
         } else if (autho.getSubProcess() != null) {
             Stamp stamp = stampRepository.findBySubProcessIdAndIsActive(autho.getSubProcess().getId(), true);
             BufferedImage stampImage = ImageIO.read(new File(stamp.getStampLink()));
@@ -302,6 +302,23 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    public ImageRes getSignatureImageByEmployee(Long employeeId) throws IOException {
+
+        ImageRes imageRes = new ImageRes();
+        Signature signature = signatureRepository.findByEmployeeAndIsActive(employeeId, true);
+        if (signature != null){
+            BufferedImage sigImage = ImageIO.read(new File(signature.getSignatureLink()));
+            ByteArrayOutputStream sibos = new ByteArrayOutputStream();
+            ImageIO.write(sigImage, "png", sibos);
+            byte[] sidata = sibos.toByteArray();
+            imageRes.setSignature(sidata);
+            imageRes.setEmployee(signature.getEmployee());
+        }
+
+        return imageRes;
+    }
+
+    @Override
     public ImageRes getStampImages(Long stampId) throws IOException {
         ImageRes imageRes = new ImageRes();
         Stamp stamp = stampRepository.findById(stampId).orElse(null);
@@ -313,7 +330,7 @@ public class ImageServiceImpl implements ImageService {
             imageRes.setStamp(stadata);
             imageRes.setProcess(stamp.getProcess());
             imageRes.setSubProcess(stamp.getSubProcess());
-            imageRes.setOrganizationalUnit(stamp.getOrganizationalUnit());
+            imageRes.setTeam(stamp.getTeam());
             imageRes.setDistrict(stamp.getDistrict());
             imageRes.setBranch(stamp.getBranch());
         }

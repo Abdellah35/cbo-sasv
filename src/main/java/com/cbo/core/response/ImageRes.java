@@ -16,7 +16,7 @@ public class ImageRes {
     private byte[] signature;
     private int id;
     private Employee employee;
-    private OrganizationalUnit organizationalUnit;
+    private Team team;
     private SubProcess subProcess;
     private Process process;
     private Branch branch;

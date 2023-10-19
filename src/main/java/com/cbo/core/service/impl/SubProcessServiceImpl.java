@@ -25,12 +25,12 @@ public class SubProcessServiceImpl implements SubProcessService {
         return resultWrapper;
     }
 
-    @Override
-    public ResultWrapper<List<SubProcess>> findSubProcessByProcessId(Long processId) {
-        ResultWrapper<List<SubProcess>> resultWrapper = new ResultWrapper<>();
-        resultWrapper.setResult(subProcessRepository.findByProcessId(processId));
-        return resultWrapper;
-    }
+//    @Override
+//    public ResultWrapper<List<SubProcess>> findSubProcessByProcessId(Long processId) {
+//        ResultWrapper<List<SubProcess>> resultWrapper = new ResultWrapper<>();
+//        resultWrapper.setResult(subProcessRepository.findByProcessId(processId));
+//        return resultWrapper;
+//    }
 
     @Override
     public ResultWrapper<SubProcess> findSubProcessById(Long subProcessId) {

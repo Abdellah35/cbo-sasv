@@ -16,21 +16,30 @@ public class URIS {
     public static final String AUTHORITY_IMAGES_BY_ID = AUTHORITY + "images/{id}";
 
     public static final String SIGNATURE_IMAGES_BY_ID = AUTHORITY + "images/signature/{signatureId}";
+    public static final String SIGNATURE_IMAGES_BY_EMPLOYEE_ID = AUTHORITY + "images/signature/employee/{employeeId}";
     public static final String STAMP_IMAGES_BY_ID = AUTHORITY + "images/stamp/{stampId}";
 
     public static final String EMPLOYEE_LIST = AUTHORITY + "employees";
     public static final String EMPLOYEE_BY_ID = AUTHORITY + "employees/{employeeId}";
+    public static final String EMPLOYEE_BY_NAME = AUTHORITY + "employees/byName";
     public static final String ORG_UNIT_LIST = AUTHORITY + "OrgUnits";
     public static final String ORG_UNIT_BY_ID = AUTHORITY + "OrgUnits/{orgUnitId}";
 
     public static final String Sub_PROCESS_LIST = AUTHORITY + "subProcesses";
     public static final String Sub_PROCESS_BY_ID = AUTHORITY + "subProcesses/{subProcessId}";
+    public static final String EMPLOYEE_BY_SUB_PROCESS_ID = AUTHORITY + "subProcesses/{subProcessId}/employees";
 
     public static final String PROCESS_LIST = AUTHORITY + "processes";
     public static final String PROCESS_BY_ID = AUTHORITY + "processes/{processId}";
+    public static final String EMPLOYEE_BY_PROCESS_ID = AUTHORITY + "processes/{processId}/employees";
+
+
 
     public static final String BRANCH_LIST = AUTHORITY + "branches";
     public static final String BRANCH_BY_ID = AUTHORITY + "branches/{branchId}";
+
+    public static final String TEAM_LIST = AUTHORITY + "teams";
+    public static final String TEAM_BY_ID = AUTHORITY + "teams/{teamId}";
 
     public static final String DISTRICT_LIST = AUTHORITY + "districts";
     public static final String DISTRICT_BY_ID = AUTHORITY + "districts/{districtId}";

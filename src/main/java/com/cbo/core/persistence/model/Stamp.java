@@ -22,7 +22,7 @@ public class Stamp {
 
     @ManyToOne
     @JoinColumn(name = "ORGANIZATION_UNIT_ID")
-    private OrganizationalUnit organizationalUnit;
+    private Team team;
 
     @ManyToOne
     @JoinColumn(name = "DISTRICT_ID")

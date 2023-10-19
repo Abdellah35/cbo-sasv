@@ -4,10 +4,13 @@ package com.cbo.core.utility;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -63,5 +66,20 @@ public class JwtUtils {
         // Parse the token and get the subject (username)
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         return claims.getSubject();
+    }
+
+    public List<GrantedAuthority> grantedAuthorities(String token) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String role : getRolesFromToken(token)) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+
+        return authorities;
+    }
+
+    private List<String> getRolesFromToken(String token) {
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        List<String> roles = (List<String>) claims.get("authorities");
+        return roles;
     }
 }

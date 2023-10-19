@@ -8,7 +8,7 @@ import java.util.List;
 public interface SubProcessService {
     ResultWrapper<List<SubProcess>> findAllSubProcesses();
 
-    ResultWrapper<List<SubProcess>> findSubProcessByProcessId(Long processId);
+//    ResultWrapper<List<SubProcess>> findSubProcessByProcessId(Long processId);
 
     ResultWrapper<SubProcess> findSubProcessById(Long subProcessId);
 

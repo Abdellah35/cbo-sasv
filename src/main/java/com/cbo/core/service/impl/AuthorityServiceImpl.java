@@ -28,7 +28,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Autowired
     private StampRepository stampRepository;
     @Autowired
-    private OrganizationService organizationService;
+    private TeamService teamService;
     @Autowired
     private ProcessService processService;
     @Autowired
@@ -37,9 +37,6 @@ public class AuthorityServiceImpl implements AuthorityService {
     private BranchService branchService;
     @Autowired
     private DistrictService districtService;
-    @Autowired
-    private OrganizationalUnitRepository organizationalUnitRepository;
-
 
     @Override
     public ResultWrapper<AuthorityDTO> registerAuthority(AuthorityDTO authorityDTO) {
@@ -54,13 +51,13 @@ public class AuthorityServiceImpl implements AuthorityService {
             resultWrapper.setStatus(false);
             resultWrapper.setMessage("No such employee exists!");
             return resultWrapper;
-        } else if (authorityDTO.getOrganizationalUnit() != null) {
-            long orgId = authorityDTO.getOrganizationalUnit().getId();
+        } else if (authorityDTO.getTeam() != null) {
+            long orgId = authorityDTO.getTeam().getId();
             if (isOrgUnitFree(orgId) && doesOrgUNitHaveStamp(orgId)) {
-                authority.setOrganizationalUnit(organizationService.findOrganizationUnitById(orgId));
+                authority.setTeam(teamService.findTeam(orgId));
             } else {
                 resultWrapper.setStatus(false);
-                resultWrapper.setMessage("Selected OrgUnit doesn't have stamp image or have active authority pair");
+                resultWrapper.setMessage("Selected Team doesn't have stamp image or have active authority pair");
                 return resultWrapper;
             }
         } else if (authorityDTO.getSubProcess() != null) {
@@ -241,7 +238,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     }
 
     private boolean isOrgUnitFree(Long employeeId) {
-        Authority authority = authorityRepo.findAuthorityByOrganizationalUnitAndState(employeeId, AuthorityStatus.Active.name());
+        Authority authority = authorityRepo.findAuthorityByTeamAndState(employeeId, AuthorityStatus.Active.name());
         return authority == null;
     }
 

@@ -24,6 +24,7 @@ public interface ImageService {
     ImageRes getImages(Long authorityId) throws IOException;
 
     ImageRes getSignatureImages(Long signatureId) throws IOException;
+    ImageRes getSignatureImageByEmployee(Long employeeId) throws IOException;
     ImageRes getStampImages(Long stampId) throws IOException;
 
     ResultWrapper<List<StampDTO>> getAllStamps();

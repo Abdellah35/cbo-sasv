@@ -22,18 +22,18 @@ public class ProcessController {
     @Autowired
     private ProcessService processService;
 
-    @GetMapping(value = URIS.PROCESS_LIST, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @GetMapping(value = URIS.PROCESS_LIST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_USER')")
     public ResponseEntity<ResultWrapper<List<Process>>> getProcesses() {
         ResultWrapper<List<Process>> resultWrapper = processService.findAllProcesses();
 
         return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
     }
 
-    @GetMapping(value = URIS.PROCESS_BY_ID, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @GetMapping(value = URIS.PROCESS_BY_ID,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_USER')")
     public ResponseEntity<ResultWrapper<Process>> getProcessById(@PathVariable("processId") Long processId) {
         ResultWrapper<Process> resultWrapper = processService.findProcessById(processId);
 

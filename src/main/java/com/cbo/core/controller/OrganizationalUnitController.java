@@ -21,18 +21,18 @@ public class OrganizationalUnitController {
     @Autowired
     private OrganizationService organizationService;
 
-    @GetMapping(value = URIS.ORG_UNIT_LIST, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @GetMapping(value = URIS.ORG_UNIT_LIST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_USER')")
     public ResponseEntity<ResultWrapper<List<OrganizationalUnit>>> getOrganizationalUnits() {
         ResultWrapper<List<OrganizationalUnit>> resultWrapper = organizationService.getOrganizationUnits();
 
         return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
     }
 
-    @GetMapping(value = URIS.ORG_UNIT_BY_ID, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @GetMapping(value = URIS.ORG_UNIT_BY_ID,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_USER')")
     public ResponseEntity<ResultWrapper<OrganizationalUnit>> getOrganizationalUnitById(@PathVariable("orgUnitId") Long orgUnitId) {
         ResultWrapper<OrganizationalUnit> resultWrapper = organizationService.getOrganizationUnitById(orgUnitId);
 

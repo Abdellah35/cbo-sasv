@@ -27,30 +27,36 @@ public class ImageController {
 
 
     @GetMapping(value = URIS.AUTHORITY_IMAGES_BY_ID)
-    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_USER')")
     public ImageRes getImage(@PathVariable("id") Long id) throws IOException {
 
         return imageService.getImages(id);
     }
 
     @GetMapping(value = URIS.STAMP_IMAGES_BY_ID)
-    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_USER')")
     public ImageRes getStampImages(@PathVariable("stampId") Long stampId) throws IOException {
 
         return imageService.getStampImages(stampId);
     }
 
     @GetMapping(value = URIS.SIGNATURE_IMAGES_BY_ID)
-    //@PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_VIEW')")
+    @PreAuthorize("hasAnyRole('SASV_ADMIN','SASV_USER')")
     public ImageRes getSignatureImages(@PathVariable("signatureId") Long signatureId) throws IOException {
 
         return imageService.getSignatureImages(signatureId);
     }
 
+    @GetMapping(value = URIS.SIGNATURE_IMAGES_BY_EMPLOYEE_ID)
+    public ImageRes getSignatureImageByEmployee(@PathVariable("employeeId") Long employeeId) throws IOException {
+
+        return imageService.getSignatureImageByEmployee(employeeId);
+    }
+
 
     @PostMapping(value = URIS.UPLOAD_SIGNATURE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    //@PreAuthorize("hasRole('SASV_ADMIN')")
+    @PreAuthorize("hasRole('SASV_ADMIN')")
     public ResponseEntity<ResultWrapper<SignatureDTO>> addEmployeeSignature(@RequestParam("signature") MultipartFile signature,
                                                                             @RequestParam("employeeId") Long employeeId) throws IOException {
         SignatureDTO signatureDTO = new SignatureDTO();
@@ -62,9 +68,9 @@ public class ImageController {
 
     @PostMapping(value = URIS.UPLOAD_STAMP,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    //@PreAuthorize("hasRole('SASV_ADMIN')")
+    @PreAuthorize("hasRole('SASV_ADMIN')")
     public ResponseEntity<ResultWrapper<StampDTO>> addStamp(@RequestParam(name="stamp") MultipartFile stamp,
-                                                            @RequestParam(name="organizationUnitId", required = false) Long organizationUnitId,
+                                                            @RequestParam(name="teamId", required = false) Long teamId,
                                                             @RequestParam(name="subProcessId", required = false) Long subProcessId,
                                                             @RequestParam(name="processId", required = false) Long processId,
                                                             @RequestParam(name="branchId", required = false) Long branchId,
@@ -72,7 +78,7 @@ public class ImageController {
         StampDTO stampDTO = new StampDTO();
         stampDTO.setStamp(stamp);
         stampDTO.setProcessId(processId);
-        stampDTO.setOrganizationUnitId(organizationUnitId);
+        stampDTO.setTeamId(teamId);
         stampDTO.setSubProcessId(subProcessId);
         stampDTO.setBranchId(branchId);
         stampDTO.setDistrictId(districtId);
@@ -80,18 +86,18 @@ public class ImageController {
         return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
     }
 
-    @GetMapping(value = URIS.RETRIEVE_SIGNATURE_LIST, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @GetMapping(value = URIS.RETRIEVE_SIGNATURE_LIST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    //@PreAuthorize("hasRole('SASV_ADMIN')")
+    @PreAuthorize("hasRole('SASV_ADMIN')")
     public ResponseEntity<ResultWrapper<List<SignatureDTO>>> getAllSignatures(){
 
         ResultWrapper<List<SignatureDTO>> resultWrapper= imageService.getAllSignatures();
         return new ResponseEntity<>(resultWrapper, HttpStatus.OK);
     }
 
-    @GetMapping(value = URIS.RETRIEVE_STAMP_LIST, consumes = MediaType.APPLICATION_JSON_VALUE,
+    @GetMapping(value = URIS.RETRIEVE_STAMP_LIST,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    //@PreAuthorize("hasRole('SASV_ADMIN')")
+    @PreAuthorize("hasRole('SASV_ADMIN')")
     public ResponseEntity<ResultWrapper<List<StampDTO>>> getAllStamps(){
 
         ResultWrapper<List<StampDTO>> resultWrapper= imageService.getAllStamps();

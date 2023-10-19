@@ -12,14 +12,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StampDTO extends BaseDTO{
-    private Long organizationUnitId;
+    private Long teamId;
     private Long subProcessId;
     private Long processId;
     private Long branchId;
     private Long districtId;
 
     //
-    private OrganizationalUnit organizationalUnit;
+    private Team team;
     private SubProcess subProcess;
     private Process process;
     private Branch branch;

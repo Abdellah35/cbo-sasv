@@ -36,8 +36,8 @@ public class Authority implements Serializable {
     private Employee employee;
 
     @ManyToOne
-    @JoinColumn(name = "ORGANIZATION_UNIT_ID")
-    private OrganizationalUnit organizationalUnit;
+    @JoinColumn(name = "TEAM_ID")
+    private Team team;
 
     @ManyToOne
     @JoinColumn(name = "SUB_PROCESS_ID")
@@ -67,10 +67,10 @@ public class Authority implements Serializable {
     private LocalDateTime modifiedTimestamp;
 
 
-    public Authority(OrganizationalUnit organizationalUnit, Employee employee, String status) {
+    public Authority(Team team, Employee employee, String status) {
         this.employee = employee;
         this.status = status;
-        this.organizationalUnit = organizationalUnit;
+        this.team = team;
     }
 
 }

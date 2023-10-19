@@ -4,6 +4,7 @@ import com.cbo.core.service.impl.UserDetailsServiceImpl;
 import com.cbo.core.utility.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -15,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -40,12 +42,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             if (jwtUtils.validateToken(token)) {
                 // Get the username from the token
                 String username = jwtUtils.getUsernameFromToken(token);
-
-                // Get the user details from the userDetailsService
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
+                List<GrantedAuthority> roles = jwtUtils.grantedAuthorities(token);
                 // Create an authentication object from the user details and token
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(token, null, roles);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 // Set the authentication to the SecurityContext
@@ -56,9 +55,5 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // Continue the filter chain
         filterChain.doFilter(request, response);
     }
-/*    private String parseJwt(HttpServletRequest request) {
-        String jwt = jwtUtils.getJwtFromCookies(request);
-        return jwt;
-    }*/
 
 }
