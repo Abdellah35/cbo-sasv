@@ -13,6 +13,7 @@ import com.cbo.core.persistence.repository.StampRepository;
 import com.cbo.core.response.ImageRes;
 import com.cbo.core.service.*;
 import com.cbo.core.utility.FileUploadUtil;
+import io.github.pixee.security.Filenames;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -64,7 +65,7 @@ public class ImageServiceImpl implements ImageService {
         if (sigImage != null) {
             String uploadDir = "auth-images/signatures/" + signatureDTO.getEmployeeId();
             FileUploadUtil.saveFile(uploadDir, sigImage.getOriginalFilename(), sigImage);
-            signature.setSignatureLink(uploadDir + "/" + sigImage.getOriginalFilename());
+            signature.setSignatureLink(uploadDir + "/" + Filenames.toSimpleFileName(sigImage.getOriginalFilename()));
             signature.setEmployee(employeeService.findEmployeeById(signatureDTO.getEmployeeId()));
             signature.setActive(true);
             Signature existingSignature = signatureRepository.findByEmployeeAndIsActive(signatureDTO.getEmployeeId(), true);
@@ -95,7 +96,7 @@ public class ImageServiceImpl implements ImageService {
             if (stampDTO.getTeamId() != null) {
                 String uploadDir = "auth-images/stamp/team" + stampDTO.getTeamId();
                 FileUploadUtil.saveFile(uploadDir, stampImg.getOriginalFilename(), stampImg);
-                stamp.setStampLink(uploadDir + "/" + stampImg.getOriginalFilename());
+                stamp.setStampLink(uploadDir + "/" + Filenames.toSimpleFileName(stampImg.getOriginalFilename()));
 
                 stamp.setTeam(teamService.findTeam(stampDTO.getTeamId()));
                 Stamp existingOrgStamp = stampRepository.findByOrganizationUnitIdIdAndIsActive(stampDTO.getTeamId(), true);
@@ -106,7 +107,7 @@ public class ImageServiceImpl implements ImageService {
             } else if (stampDTO.getSubProcessId() != null) {
                 String uploadDir = "auth-images/stamp/subProcess" + stampDTO.getSubProcessId();
                 FileUploadUtil.saveFile(uploadDir, stampImg.getOriginalFilename(), stampImg);
-                stamp.setStampLink(uploadDir + "/" + stampImg.getOriginalFilename());
+                stamp.setStampLink(uploadDir + "/" + Filenames.toSimpleFileName(stampImg.getOriginalFilename()));
                 stamp.setSubProcess(subProcessService.findSubProcess(stampDTO.getSubProcessId()));
                 Stamp existingSubStamp = stampRepository.findBySubProcessIdAndIsActive(stampDTO.getSubProcessId(), true);
                 if (existingSubStamp != null) {
@@ -116,7 +117,7 @@ public class ImageServiceImpl implements ImageService {
             } else if (stampDTO.getProcessId() != null) {
                 String uploadDir = "auth-images/stamp/process" + stampDTO.getProcessId();
                 FileUploadUtil.saveFile(uploadDir, stampImg.getOriginalFilename(), stampImg);
-                stamp.setStampLink(uploadDir + "/" + stampImg.getOriginalFilename());
+                stamp.setStampLink(uploadDir + "/" + Filenames.toSimpleFileName(stampImg.getOriginalFilename()));
                 stamp.setProcess(processService.findProcess(stampDTO.getProcessId()));
                 Stamp existingProcStamp = stampRepository.findByProcessIdAndIsActive(stampDTO.getProcessId(), true);
                 if (existingProcStamp != null) {
@@ -126,7 +127,7 @@ public class ImageServiceImpl implements ImageService {
             }else if (stampDTO.getBranchId() != null) {
                 String uploadDir = "auth-images/stamp/branch" + stampDTO.getBranchId();
                 FileUploadUtil.saveFile(uploadDir, stampImg.getOriginalFilename(), stampImg);
-                stamp.setStampLink(uploadDir + "/" + stampImg.getOriginalFilename());
+                stamp.setStampLink(uploadDir + "/" + Filenames.toSimpleFileName(stampImg.getOriginalFilename()));
                 stamp.setBranch(branchService.findBranch(stampDTO.getBranchId()));
                 Stamp existingProcStamp = stampRepository.findByBranchIdAndIsActive(stampDTO.getBranchId(), true);
                 if (existingProcStamp != null) {
@@ -136,7 +137,7 @@ public class ImageServiceImpl implements ImageService {
             } else if (stampDTO.getDistrictId() != null) {
                 String uploadDir = "auth-images/stamp/district" + stampDTO.getDistrictId();
                 FileUploadUtil.saveFile(uploadDir, stampImg.getOriginalFilename(), stampImg);
-                stamp.setStampLink(uploadDir + "/" + stampImg.getOriginalFilename());
+                stamp.setStampLink(uploadDir + "/" + Filenames.toSimpleFileName(stampImg.getOriginalFilename()));
                 stamp.setDistrict(districtService.findDistrict(stampDTO.getDistrictId()));
                 Stamp existingProcStamp = stampRepository.findByDistrictIdAndIsActive(stampDTO.getDistrictId(), true);
                 if (existingProcStamp != null) {
