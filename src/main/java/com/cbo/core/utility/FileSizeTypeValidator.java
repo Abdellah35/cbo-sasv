@@ -37,7 +37,7 @@ public class FileSizeTypeValidator
     }
 
     private boolean isSupportedContentType(String contentType) {
-        return contentType.equals("image/jpg")
-                || contentType.equals("image/jpeg");
+        return "image/jpg".equals(contentType)
+                || "image/jpeg".equals(contentType);
     }
 }
